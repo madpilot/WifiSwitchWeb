@@ -1,8 +1,8 @@
 import { h, Component } from 'preact';
 
 import Header from './header';
+import WifiPanel from './dhcp-panel';
 import NetworkPanel from './network-panel';
-import DHCPPanel from './dhcp-panel';
 import MQTTPanel from './mqtt-panel';
 import SyslogPanel from './syslog-panel';
 
@@ -30,14 +30,14 @@ export default class App extends Component {
         <Header />
         <div>
           <form>
-            <NetworkPanel 
+            <WifiPanel 
               scan={this.state.network.scan} 
               ssid={this.state.network.ssid} 
               encryption={this.state.network.encryption} 
               passkey={this.state.network.passkey} 
               onUpdate={this.updateNetwork.bind(this)} 
               />
-            <DHCPPanel />
+            <NetworkPanel />
             <MQTTPanel />
             <SyslogPanel />
           </form>
