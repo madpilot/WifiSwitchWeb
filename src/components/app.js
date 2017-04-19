@@ -8,10 +8,10 @@ export default class App extends Component {
     super();
     this.state = {
       network: {
-        ssid: {
-          selected: "",
-          scan: true
-        }
+        ssid: "",
+        encryption: 7,
+        passkey: '',
+        scan: true
       }
     };
   }
@@ -26,7 +26,13 @@ export default class App extends Component {
         <Header />
         <div>
           <form>
-            <NetworkPanel network={this.state.network} onUpdate={this.updateNetwork.bind(this)} />
+            <NetworkPanel 
+              scan={this.state.network.scan} 
+              ssid={this.state.network.ssid} 
+              encryption={this.state.network.encryption} 
+              passkey={this.state.network.passkey} 
+              onUpdate={this.updateNetwork.bind(this)} 
+              />
           </form>
         </div>
       </div>

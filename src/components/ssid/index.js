@@ -4,13 +4,21 @@ const SCANNING = 0;
 const SCANNING_COMPLETE = 1;
 
 export default class SSID extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
+    this._id = "ssid_" + Math.random().toString(36).substring(2, 7);
+    
     this.state = {
       connection: SCANNING_COMPLETE,
-      aps: [
-        { ssid: 'Burntos' }
-      ]
+      scanned: {
+        ssid: this.props.ssid,
+        encryption: this.props.encryption
+      },
+      manual: {
+        ssid: this.props.ssid,
+        encryption: this.props.encryption
+      },
+      aps: [{"ssid":"OPTUSVD3C49EE8","rssi":-90,"encryption":"8"},{"ssid":"Dean&Carol.b","rssi":-92,"encryption":"7"},{"ssid":"NETGEAR19","rssi":-76,"encryption":"4"},{"ssid":"Burntos","rssi":-60,"encryption":"4"},{"ssid":"OPTUS_B8EC72","rssi":-89,"encryption":"8"},{"ssid":"OPTUS_A49184","rssi":-85,"encryption":"8"}]
     };
   }
 
@@ -24,9 +32,31 @@ export default class SSID extends Component {
     this.props.onModeChange(false);
   };
 
+  setScannedState(state) {
+    this.setState({ scanned: Object.assign({}, this.state.scanned, state) });
+    this.props.onChange(this.state.scanned);
+  }
+
+  setManualState(state) {
+    this.setState({ manual: Object.assign({}, this.state.manual, state) });
+    this.props.onChange(this.state.manual);
+  }
+
+  changeAp = e => {
+    let ap = this.state.aps.filter((ap) => ap.ssid == e.target.value);
+    
+    if(ap.length > 0) {
+      this.setScannedState({ ssid: ap[0].ssid, encryption: ap[0].encryption })
+    }
+  };
+
+  changeManualSSID(e) {
+    this.setManualState({ ssid: e.target.value });
+  }
+
   renderScanning() {
     return (
-      <select id="ssid" disabled>
+      <select id={this._id} disabled>
         <option>Scanning...</option>
       </select>
     );
@@ -34,10 +64,10 @@ export default class SSID extends Component {
 
   renderAps() {
     return (
-      <select id="ssid">
+      <select id={this._id} onChange={this.changeAp.bind(this)}>
         {this.state.aps.map((ap) => {
           return (
-            <option value={ap.ssid} key={ap.ssid} selected={this.props.selected == ap.ssid ? "selected" : null}>{ap.ssid}</option>
+            <option value={ap.ssid} key={ap.ssid} selected={this.state.scanned.ssid == ap.ssid ? "selected" : null}>{ap.ssid}</option>
           );
         })}
       </select>
@@ -46,7 +76,13 @@ export default class SSID extends Component {
 
   renderManual() {
     return (
-      <input type="text" autocomplete="off" autocapitalize="off" value={this.props.selected} />
+      <input 
+        type="text"
+        autocomplete="off" 
+        autocapitalize="off" 
+        value={this.state.manual.ssid} 
+        id={this._id} 
+        onChange={this.changeManualSSID.bind(this)} />
     );
   }
 
@@ -79,11 +115,11 @@ export default class SSID extends Component {
   render() {
     return (
       <div>
-        <label for="ssid">
+        <label for={this._id}>
           Name
           {this.renderToggle()}
         </label>
-        <span class="wrapper">
+        <span>
           {this.renderInput()}
         </span>
       </div>

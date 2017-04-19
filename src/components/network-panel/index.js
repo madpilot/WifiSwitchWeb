@@ -1,26 +1,73 @@
 import { h, Component } from 'preact';
 import SSID from '../ssid';
+import Encryption from '../encryption';
+import Passkey from '../passkey';
 
 export default class NetworkPanel extends Component {
   constructor(props) {
     super(props);
-    this.state = this.props.network;
+
+    this.state = {
+      scan: props.scan,
+      ssid: props.ssid,
+      encryption: props.encryption,
+      passkey: props.passkey
+    }
   }
 
-  updateSSID(ssid) {
-    this.setState({ ssid: Object.assign({}, this.state.ssid, { selected: ssid }) })
-    this.props.onUpdate({ ssid: this.state.ssid });
+  updateAP(state) {
+    this.setState(state);
+
+    this.props.onUpdate({
+      scan: this.state.scan,
+      ssid: this.state.ssid,
+      encryption: this.state.encryption,
+      passkey: this.state.passkey
+    });
+  }
+
+  changeEncryption(value) {
+    this.updateAP({ encryption: value });
   }
 
   toggleScan(scan) {
-    this.setState({ ssid: Object.assign({}, this.state.ssid, { scan: scan }) })
-    this.props.onUpdate({ ssid: this.state.ssid });
+    this.updateAP({ scan: scan });
+  }
+
+  renderSSID() {
+    return <SSID 
+            ssid={this.state.ssid} 
+            encryption={this.state.encryption} 
+            passkey={this.state.passkey} 
+            scan={this.state.scan} 
+            onModeChange={this.toggleScan.bind(this)} 
+            onChange={this.updateAP.bind(this)} 
+            />
+  }
+
+  renderEncryption() {
+    if(this.state.scan) {
+      return '';
+    } else {
+      return <Encryption selected={this.state.encryption} onChange={this.changeEncryption.bind(this)} />
+    }
+  }
+
+  renderPasskey() {
+    if(this.state.encryption != 7) {
+      return <Passkey />
+    } else {
+      return "";
+    }
   }
 
   render() {
+    const selected = '';
     return (
       <section>
-        <SSID scan={this.state.ssid.scan} selected={this.state.ssid.selected} onModeChange={this.toggleScan.bind(this)} onChange={this.updateSSID} />
+        {this.renderSSID()}
+        {this.renderEncryption()}
+        {this.renderPasskey()}
       </section>
     );
   }
