@@ -1,7 +1,7 @@
 import { h, Component } from 'preact';
 import SSID from '../ssid';
 import Encryption from '../encryption';
-import Passkey from '../passkey';
+import Input from '../input';
 
 export default class NetworkPanel extends Component {
   constructor(props) {
@@ -22,7 +22,7 @@ export default class NetworkPanel extends Component {
       scan: this.state.scan,
       ssid: this.state.ssid,
       encryption: this.state.encryption,
-      passkey: (this.state.encryption == 7 ? "" : this.state.passkey)
+      passkey: (this.state.encryption == "7" ? "" : this.state.passkey)
     });
   }
 
@@ -58,20 +58,21 @@ export default class NetworkPanel extends Component {
   }
 
   renderPasskey() {
-    if(this.state.encryption != 7) {
-      return <Passkey onChange={this.changePasskey.bind(this)} />
+    if(this.state.encryption != "7") {
+      return <Input label="Password" type="password" value={this.state.passkey} autocomplete="off" autocapitalize="off" onChange={this.changePasskey.bind(this)} />
     } else {
       return "";
     }
   }
 
   render() {
-    const selected = '';
     return (
       <section>
+        <h3>Network Settings</h3>
         {this.renderSSID()}
         {this.renderEncryption()}
         {this.renderPasskey()}
+        <Input label="Device Name" type="text" placeholder="device" value="" autocomplete="off" autocapitalize="off" />
       </section>
     );
   }

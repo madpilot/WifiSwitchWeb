@@ -2,6 +2,9 @@ import { h, Component } from 'preact';
 
 import Header from './header';
 import NetworkPanel from './network-panel';
+import DHCPPanel from './dhcp-panel';
+import MQTTPanel from './mqtt-panel';
+import SyslogPanel from './syslog-panel';
 
 export default class App extends Component {
   constructor() {
@@ -9,7 +12,7 @@ export default class App extends Component {
     this.state = {
       network: {
         ssid: "",
-        encryption: 7,
+        encryption: "7",
         passkey: '',
         scan: true
       }
@@ -34,6 +37,9 @@ export default class App extends Component {
               passkey={this.state.network.passkey} 
               onUpdate={this.updateNetwork.bind(this)} 
               />
+            <DHCPPanel />
+            <MQTTPanel />
+            <SyslogPanel />
           </form>
         </div>
       </div>
