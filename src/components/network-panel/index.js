@@ -22,7 +22,7 @@ export default class NetworkPanel extends Component {
       scan: this.state.scan,
       ssid: this.state.ssid,
       encryption: this.state.encryption,
-      passkey: this.state.passkey
+      passkey: (this.state.encryption == 7 ? "" : this.state.passkey)
     });
   }
 
@@ -31,7 +31,7 @@ export default class NetworkPanel extends Component {
   }
 
   changeEncryption(value) {
-    this.updateAP({ encryption: value, password: (value == 7 ? "" : this.state.password) });
+    this.updateAP({ encryption: value });
   }
 
   toggleScan(scan) {
