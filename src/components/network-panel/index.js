@@ -2,10 +2,6 @@ import { h, Component } from 'preact';
 import Input from '../input';
 
 export default class NetworkPanel extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   update(state) {
     this.props.onUpdate(Object.assign({}, this.props, state));
   }

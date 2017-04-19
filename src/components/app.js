@@ -23,6 +23,12 @@ export default class App extends Component {
         dnsServer: "",
         gateway: "",
         subnet: ""
+      },
+      syslog: {
+        syslog: true,
+        server: "",
+        port: "",
+        level: "6"
       }
     };
   }
@@ -33,6 +39,10 @@ export default class App extends Component {
 
   updateNetwork(network) {
     this.setState({ network: network });
+  }
+
+  updateSyslog(syslog) {
+    this.setState({ syslog: syslog });
   }
 
   render() {
@@ -59,7 +69,14 @@ export default class App extends Component {
               />
 
             <MQTTPanel />
-            <SyslogPanel />
+            <SyslogPanel
+              syslog={this.state.syslog.syslog}
+              server={this.state.syslog.server}
+              port={this.state.syslog.port}
+              level={this.state.syslog.level}
+              onUpdate={this.updateSyslog.bind(this)}
+
+              />
           </form>
         </div>
       </div>
