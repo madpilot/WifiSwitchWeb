@@ -28,12 +28,19 @@ module.exports = {
 				test: /\.jsx?$/,
 				exclude: /node_modules/,
 				loader: 'babel-loader'
+			},
+			{
+				test: /\.(xml|html|txt|md)$/,
+				loader: 'raw-loader'
 			}
 		]
 	},
 
 	plugins: ([
 		new webpack.NoEmitOnErrorsPlugin(),
+		new webpack.DefinePlugin({
+			'process.env.NODE_ENV': JSON.stringify(ENV)
+		}),
 		new HtmlWebpackPlugin({
 			template: './index.ejs',
 			minify: { collapseWhitespace: true }
@@ -49,5 +56,16 @@ module.exports = {
 		__filename: false,
 		__dirname: false,
 		setImmediate: false
+	},
+
+	devtool: ENV==='production' ? 'source-map' : 'cheap-module-eval-source-map',
+
+	devServer: {
+		port: process.env.PORT || 8080,
+		host: 'localhost',
+		publicPath: '/',
+		contentBase: './src',
+		historyApiFallback: true,
+		open: true,
 	}
 };
