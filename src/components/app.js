@@ -10,13 +10,25 @@ export default class App extends Component {
   constructor() {
     super();
     this.state = {
-      network: {
+      wifi: {
         ssid: "",
         encryption: "7",
         passkey: '',
         scan: true
+      },
+      network: {
+        deviceName: "",
+        dhcp: true,
+        ipAddress: "",
+        dnsServer: "",
+        gateway: "",
+        subnet: ""
       }
     };
+  }
+
+  updateWifi(wifi) {
+    this.setState({ wifi: wifi });
   }
 
   updateNetwork(network) {
@@ -29,14 +41,23 @@ export default class App extends Component {
         <Header />
         <div>
           <form>
-            <WifiPanel 
-              scan={this.state.network.scan} 
-              ssid={this.state.network.ssid} 
-              encryption={this.state.network.encryption} 
-              passkey={this.state.network.passkey} 
-              onUpdate={this.updateNetwork.bind(this)} 
+            <WifiPanel
+              scan={this.state.wifi.scan}
+              ssid={this.state.wifi.ssid}
+              encryption={this.state.wifi.encryption}
+              passkey={this.state.wifi.passkey}
+              onUpdate={this.updateWifi.bind(this)}
               />
-            <NetworkPanel />
+            <NetworkPanel
+              deviceName={this.state.network.deviceName}
+              dhcp={this.state.network.dhcp}
+              ipAddress={this.state.network.ipAddress}
+              dnsServer={this.state.network.dnsServer}
+              gateway={this.state.network.gateway}
+              subnet={this.state.network.subnet}
+              onUpdate={this.updateNetwork.bind(this)}
+              />
+
             <MQTTPanel />
             <SyslogPanel />
           </form>
