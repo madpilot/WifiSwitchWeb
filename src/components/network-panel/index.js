@@ -31,7 +31,7 @@ export default class NetworkPanel extends Component {
   }
 
   changeEncryption(value) {
-    this.updateAP({ encryption: value });
+    this.updateAP({ encryption: value, password: (value == 7 ? "" : this.state.password) });
   }
 
   toggleScan(scan) {
