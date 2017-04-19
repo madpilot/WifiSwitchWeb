@@ -82,7 +82,7 @@ export default class SSID extends Component {
         autocapitalize="off" 
         value={this.state.manual.ssid} 
         id={this._id} 
-        onChange={this.changeManualSSID.bind(this)} />
+        onInput={this.changeManualSSID.bind(this)} />
     );
   }
 
