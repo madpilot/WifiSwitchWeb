@@ -25,11 +25,13 @@ export default class SSID extends Component {
   setScanMode = e => {
     e.preventDefault();
     this.props.onModeChange(true);
+    this.props.onChange(this.state.scanned);
   };
 
   setManualMode = e => {
     e.preventDefault();
     this.props.onModeChange(false);
+    this.props.onChange(this.state.manual);
   };
 
   setScannedState(state) {
