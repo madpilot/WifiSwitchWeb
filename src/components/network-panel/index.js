@@ -26,6 +26,10 @@ export default class NetworkPanel extends Component {
     });
   }
 
+  changePasskey(value) {
+    this.updateAP({ passkey: value });
+  }
+
   changeEncryption(value) {
     this.updateAP({ encryption: value });
   }
@@ -55,7 +59,7 @@ export default class NetworkPanel extends Component {
 
   renderPasskey() {
     if(this.state.encryption != 7) {
-      return <Passkey />
+      return <Passkey onChange={this.changePasskey.bind(this)} />
     } else {
       return "";
     }

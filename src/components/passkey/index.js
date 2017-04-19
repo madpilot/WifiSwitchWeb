@@ -13,7 +13,7 @@ export default class Passkey extends Component {
           Password
         </label>
         <span>
-          <input type="password" autocomplete="off" autocapitalize="off" id={this.id} />
+          <input type="password" autocomplete="off" autocapitalize="off" id={this.id} onInput={(e) => { this.props.onChange(e.target.value) }} />
         </span>
       </div>
     );

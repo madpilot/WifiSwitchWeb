@@ -18,7 +18,7 @@ export default class App extends Component {
 
   updateNetwork(network) {
     this.setState({ network: network });
-    console.log('updateNetwork', state);
+    console.log('updateNetwork', this.state);
   }
 
   render() {
