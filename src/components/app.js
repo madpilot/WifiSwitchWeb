@@ -1,7 +1,7 @@
 import { h, Component } from 'preact';
 
 import Header from './header';
-import WifiPanel from './dhcp-panel';
+import WifiPanel from './wifi-panel';
 import NetworkPanel from './network-panel';
 import MQTTPanel from './mqtt-panel';
 import SyslogPanel from './syslog-panel';
@@ -21,7 +21,6 @@ export default class App extends Component {
 
   updateNetwork(network) {
     this.setState({ network: network });
-    console.log('updateNetwork', this.state);
   }
 
   render() {
