@@ -1,5 +1,7 @@
 import webpack from 'webpack';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
+import HtmlWebpackInlineSourcePlugin from 'html-webpack-inline-source-plugin';
+import ReplacePlugin from 'replace-bundle-webpack-plugin';
 import path from 'path';
 const ENV = process.env.NODE_ENV || 'development';
 
@@ -43,9 +45,36 @@ module.exports = {
 		}),
 		new HtmlWebpackPlugin({
 			template: './index.ejs',
-			minify: { collapseWhitespace: true }
-		})
-	]),
+			minify: { collapseWhitespace: true },
+      inlineSource: '(.js|.css)$'
+		}),
+    new HtmlWebpackInlineSourcePlugin()
+	]).concat(ENV === 'production' ? [
+		new webpack.optimize.UglifyJsPlugin({
+			output: {
+				comments: false
+			},
+			compress: {
+				warnings: false,
+				conditionals: true,
+				unused: true,
+				comparisons: true,
+				sequences: true,
+				dead_code: true,
+				evaluate: true,
+				if_return: true,
+				join_vars: true,
+				negate_iife: false
+			}
+		}),
+		// strip out babel-helper invariant checks
+		new ReplacePlugin([{
+			// this is actually the property name https://github.com/kimhou/replace-bundle-webpack-plugin/issues/1
+			partten: /throw\s+(new\s+)?[a-zA-Z]+Error\s*\(/g,
+			replacement: () => 'return;('
+		}])
+	] : []),
+
 
 	stats: { colors: true },
 
@@ -58,7 +87,7 @@ module.exports = {
 		setImmediate: false
 	},
 
-	devtool: ENV==='production' ? 'source-map' : 'cheap-module-eval-source-map',
+	devtool: ENV === 'production' ? false : 'cheap-module-eval-source-map',
 
 	devServer: {
 		port: process.env.PORT || 8080,
