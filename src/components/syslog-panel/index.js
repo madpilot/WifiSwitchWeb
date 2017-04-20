@@ -17,9 +17,9 @@ export default class SyslogPanel extends Component {
 
   onSyslogChange(e) {
     if(e.target.checked) {
-      this.update({ syslog: false });
-    } else {
       this.update({ syslog: true });
+    } else {
+      this.update({ syslog: false });
     }
   }
 
