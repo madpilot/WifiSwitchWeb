@@ -51,6 +51,7 @@ module.exports = {
     new HtmlWebpackInlineSourcePlugin()
 	]).concat(ENV === 'production' ? [
 		new webpack.optimize.UglifyJsPlugin({
+      mangle: true,
 			output: {
 				comments: false
 			},
@@ -61,9 +62,13 @@ module.exports = {
 				comparisons: true,
 				sequences: true,
 				dead_code: true,
+        drop_console: true,
+        unsafe: true,
 				evaluate: true,
 				if_return: true,
 				join_vars: true,
+        collapse_vars: true,
+        reduce_vars: true,
 				negate_iife: false
 			}
 		}),

@@ -1,5 +1,6 @@
 import { h, Component } from 'preact';
 import Input from '../input';
+import Select from '../select';
 
 export default class SyslogPanel extends Component {
   update(state) {
@@ -23,6 +24,8 @@ export default class SyslogPanel extends Component {
   }
 
   renderForm() {
+    const levels = ["Emergency", "Alert", "Critical", "Error", "Warning", "Notice", "Information", "Debug"]
+    
     if(this.props.syslog) {
       return (
         <div>
@@ -36,16 +39,9 @@ export default class SyslogPanel extends Component {
               Level
             </label>
             <span>
-              <select onInput={this.onFieldChange('level').bind(this)}>
-                <option value="0" selected={this.props.level == "0" ? "selected" : null}>Emergency</option>
-                <option value="1" selected={this.props.level == "1" ? "selected" : null}>Alert</option>
-                <option value="2" selected={this.props.level == "2" ? "selected" : null}>Critical</option>
-                <option value="3" selected={this.props.level == "3" ? "selected" : null}>Error</option>
-                <option value="4" selected={this.props.level == "4" ? "selected" : null}>Warning</option>
-                <option value="5" selected={this.props.level == "5" ? "selected" : null}>Notice</option>
-                <option value="6" selected={this.props.level == "6" ? "selected" : null}>Information</option>
-                <option value="7" selected={this.props.level == "7" ? "selected" : null}>Debug</option>
-              </select>
+              <Select onInput={this.onFieldChange('level').bind(this)} value={this.props.level}>
+                {Object.keys(levels).map((index) => { return <option value={index}>{levels[index]}</option> })}
+              </Select>
             </span>
           </div>
         </div>

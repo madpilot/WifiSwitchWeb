@@ -1,5 +1,7 @@
 import { h, Component } from 'preact';
 
+import Select from '../select';
+
 const NONE = "7";
 const WEP = "1";
 const WPA = "2";
@@ -25,11 +27,11 @@ export default class Encryption extends Component {
           Security
         </label>
         <span>
-          <select id={this._id} onChange={(e) => this.props.onChange(e.target.value)}>
+          <Select id={this._id} onChange={(e) => this.props.onChange(e.target.value)} value={this.props.selected}>
             {types.map((type) => {
-              return <option value={type[0]} selected={this.props.selected == type[0] ? "selected" : null}>{type[1]}</option>
+              return <option value={type[0]}>{type[1]}</option>
             })}
-          </select>
+          </Select>
         </span>
       </div>
     );
