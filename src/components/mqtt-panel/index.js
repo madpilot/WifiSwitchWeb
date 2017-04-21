@@ -21,22 +21,34 @@ export default class MQTTPanel extends Component {
       portChanged: this.props.port != "",
       portDefault: this.defaultPort(ssl)
     })
+
+    this.updateProps({ port: this.state.portChanged ? this.props.port : this.state.portDefault });
   }
 
   defaultPort(ssl) {
     return ssl ? MQTT_SECURE_PORT : MQTT_PORT;
   }
 
+  updateProps(state) {
+    let newProps = Object.assign({}, {
+      server: this.props.server,
+      port: this.props.port,
+      authMode: this.props.authMode,
+      ssl: this.props.ssl,
+      publishChannel: this.props.publishChannel,
+      subscribeChannel: this.props.subscribeChannel
+    });
+    Object.keys(newProps).forEach((key) => {
+      if(typeof(state[key]) != "undefined") {
+        newProps[key] = state[key];
+      }
+    });
+    this.props.onUpdate(newProps);
+  }
+
   update(state) {
     this.setState(state);
-    this.props.onUpdate(Object.assign({}, {
-      server: this.state.server,
-      port: this.state.port,
-      authMode: this.state.authMode,
-      ssl: this.state.ssl,
-      publishChannel: this.state.publishChannel,
-      subscribeChannel: this.state.subscribeChannel
-    }));
+    this.updateProps(state);
   }
 
   onFieldChange(field) {
@@ -58,7 +70,7 @@ export default class MQTTPanel extends Component {
     if(mode == AUTH_MODE_CERTIFICATE) {
       this.setState({ authMode: mode, sslDisabled: true, portDefault: this.defaultPort(true) });
 
-      this.props.onUpdate({
+      this.updateProps({
         authMode: mode,
         ssl: true,
         port: port || MQTT_SECURE_PORT
@@ -66,7 +78,7 @@ export default class MQTTPanel extends Component {
     } else {
       this.setState({ authMode: mode, sslDisabled: false, portDefault: this.defaultPort(false) });
       
-      this.props.onUpdate({
+      this.updateProps({
         authMode: mode,
         ssl: this.state.ssl,
         port: port || MQTT_PORT
@@ -78,7 +90,7 @@ export default class MQTTPanel extends Component {
     let ssl = e.target.checked;
     let portDefault = this.defaultPort(ssl);
     this.setState({ ssl: ssl, portDefault: portDefault });
-    this.props.onUpdate({ ssl: ssl, port: this.state.portChanged ? this.props.port : portDefault });
+    this.updateProps({ ssl: ssl, port: this.state.portChanged ? this.props.port : portDefault });
   }
 
   renderUsernameAuth() {
