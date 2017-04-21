@@ -5,54 +5,88 @@ const AUTH_MODE_NONE = '0';
 const AUTH_MODE_USERNAME = '1';
 const AUTH_MODE_CERTIFICATE = '2';
 
+const MQTT_PORT = 1883;
+const MQTT_SECURE_PORT = 8883;
+
 export default class MQTTPanel extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      authMode: this.props.authMode,
-      ssl: this.props.authMode == AUTH_MODE_CERTIFICATE ? true : this.props.ssl,
-      sslDisabled: this.props.authMode == AUTH_MODE_CERTIFICATE
-    }
+    let certAuthMode = this.props.authMode == AUTH_MODE_CERTIFICATE;
+    let ssl = certAuthMode ? true : this.props.ssl;
+  
+    this.state = Object.assign({}, props, {
+      ssl: ssl,
+      sslDisabled: certAuthMode,
+      portChanged: this.props.port != "",
+      portDefault: this.defaultPort(ssl)
+    })
+  }
+
+  defaultPort(ssl) {
+    return ssl ? MQTT_SECURE_PORT : MQTT_PORT;
   }
 
   update(state) {
     this.setState(state);
-    this.props.onUpdate({
+    this.props.onUpdate(Object.assign({}, {
+      server: this.state.server,
+      port: this.state.port,
       authMode: this.state.authMode,
-      ssl: this.state.ssl
-    });
+      ssl: this.state.ssl,
+      publishChannel: this.state.publishChannel,
+      subscribeChannel: this.state.subscribeChannel
+    }));
+  }
+
+  onFieldChange(field) {
+    return (e) => {
+      let s = {}
+      s[field] = e.target.value;
+      this.update(s);
+    }
+  }
+
+  onPortChange(e) {
+    this.setState({ portChanged: true });
+    this.update({ port: e.target.value });
   }
 
   onAuthModeChange(e) {
     let mode = e.target.value;
+    let port = this.props.port;
     if(mode == AUTH_MODE_CERTIFICATE) {
-      this.setState({ authMode: mode, sslDisabled: true });
+      this.setState({ authMode: mode, sslDisabled: true, portDefault: this.defaultPort(true) });
 
       this.props.onUpdate({
         authMode: mode,
-        ssl: true
+        ssl: true,
+        port: port || MQTT_SECURE_PORT
       });
     } else {
-      this.setState({ authMode: mode, sslDisabled: false });
+      this.setState({ authMode: mode, sslDisabled: false, portDefault: this.defaultPort(false) });
       
       this.props.onUpdate({
         authMode: mode,
-        ssl: this.state.ssl
+        ssl: this.state.ssl,
+        port: port || MQTT_PORT
       });
     }
   }
 
   onSSLChange(e) {
-    this.update({ ssl: e.target.checked });
+    let ssl = e.target.checked;
+    let portDefault = this.defaultPort(ssl);
+    this.setState({ ssl: ssl, portDefault: portDefault });
+    this.props.onUpdate({ ssl: ssl, port: this.state.portChanged ? this.props.port : portDefault });
   }
 
   renderUsernameAuth() {
     if(this.state.authMode == AUTH_MODE_USERNAME) {
         return (
           <div>
-            <Input label="Username" type="text" autocomplete="off" autocapitalize="off" />
-            <Input label="Password" type="password" autocomplete="off" autocapitalize="off" />
+            <Input label="Username" type="text" autocomplete="off" value={this.props.username} autocapitalize="off" onInput={this.onFieldChange('username').bind(this)} />
+            <Input label="Password" type="password" autocomplete="off" value={this.props.password} autocapitalize="off" onInput={this.onFieldChange('password').bind(this)} />
           </div>
          );
     } else {
@@ -70,8 +104,8 @@ export default class MQTTPanel extends Component {
         <h3>MQTT settings</h3>
         
         <div>
-          <Input label="Server" type="text" placeholder="server.local" value="" autocomplete="off" autocapitalize="off" />
-          <Input label="Port" type="number" placeholder="1883" min="0" max="32768" value="1883" />
+          <Input label="Server" type="text" placeholder="server.local" value={this.props.server} autocomplete="off" autocapitalize="off" onInput={this.onFieldChange('server').bind(this)} />
+          <Input label="Port" type="number" placeholder={this.state.portDefault} min="0" max="32768" value={this.state.portChanged ? this.props.port : null} onInput={this.onPortChange.bind(this)} />
         </div>
 
        	<div>
@@ -97,8 +131,8 @@ export default class MQTTPanel extends Component {
 
         {this.renderUsernameAuth()}
        
-        <Input label="Publish Channel" type="text" autocomplete="off" autocapitalize="off" />
-        <Input label="Subscribe Channel" type="text" autocomplete="off" autocapitalize="off" />
+        <Input label="Publish Channel" type="text" value={this.props.publishChannel} autocomplete="off" autocapitalize="off" onInput={this.onFieldChange('publishChannel').bind(this)} />
+        <Input label="Subscribe Channel" type="text" value={this.props.subscribeChannel} autocomplete="off" autocapitalize="off" onInput={this.onFieldChange('subscribeChannel').bind(this)} />
       </section>
     );
   }

@@ -25,8 +25,12 @@ export default class App extends Component {
         subnet: ""
       },
       mqtt: {
+        server: "",
+        port: "",
         authMode: "0",
-        ssl: false
+        ssl: false,
+        publishChannel: "",
+        subscribeChannel: ""
       },
       syslog: {
         syslog: true,
@@ -67,6 +71,7 @@ export default class App extends Component {
               passkey={this.state.wifi.passkey}
               onUpdate={this.updateWifi.bind(this)}
               />
+            
             <NetworkPanel
               deviceName={this.state.network.deviceName}
               dhcp={this.state.network.dhcp}
@@ -77,11 +82,16 @@ export default class App extends Component {
               onUpdate={this.updateNetwork.bind(this)}
               />
 
-            <MQTTPanel 
+            <MQTTPanel
+              server={this.state.mqtt.server}
+              port={this.state.mqtt.port}
               authMode={this.state.mqtt.authMode}
               ssl={this.state.mqtt.ssl}
+              publishChannel={this.state.mqtt.publishChannel}
+              subscribeChannel={this.state.mqtt.subscribeChannel}
               onUpdate={this.updateMQTT.bind(this)}
               />
+
             <SyslogPanel
               syslog={this.state.syslog.syslog}
               server={this.state.syslog.server}
