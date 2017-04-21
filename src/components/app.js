@@ -24,6 +24,10 @@ export default class App extends Component {
         gateway: "",
         subnet: ""
       },
+      mqtt: {
+        authMode: "0",
+        ssl: false
+      },
       syslog: {
         syslog: true,
         server: "",
@@ -41,11 +45,16 @@ export default class App extends Component {
     this.setState({ network: network });
   }
 
+  updateMQTT(mqtt) {
+    this.setState({ mqtt: mqtt });
+  }
+
   updateSyslog(syslog) {
     this.setState({ syslog: syslog });
   }
 
   render() {
+    console.log(this.state);
     return (
       <div id="app">
         <Header />
@@ -68,14 +77,17 @@ export default class App extends Component {
               onUpdate={this.updateNetwork.bind(this)}
               />
 
-            <MQTTPanel />
+            <MQTTPanel 
+              authMode={this.state.mqtt.authMode}
+              ssl={this.state.mqtt.ssl}
+              onUpdate={this.updateMQTT.bind(this)}
+              />
             <SyslogPanel
               syslog={this.state.syslog.syslog}
               server={this.state.syslog.server}
               port={this.state.syslog.port}
               level={this.state.syslog.level}
               onUpdate={this.updateSyslog.bind(this)}
-
               />
           </form>
         </div>
