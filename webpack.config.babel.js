@@ -16,6 +16,10 @@ module.exports = {
 	},
 
 	resolve: {
+    alias: {
+      'react': 'preact-compat',
+      'react-dom': 'preact-compat'
+    },
 		extensions: ['.jsx', '.js' ],
 		modules: [
 			path.resolve(__dirname, "src/lib"),

@@ -1,4 +1,9 @@
 import { h, Component } from 'preact';
+import styled from 'styled-components';
+
+const StyledInput = styled.input`
+  color: blue;
+`
 
 export default class Input extends Component {
   constructor() {
@@ -16,7 +21,7 @@ export default class Input extends Component {
           {this.props.label}
         </label>
         <span>
-          <input id={this._id} {...props} />
+          <StyledInput id={this._id} {...props} />
         </span>
       </div>
     );
