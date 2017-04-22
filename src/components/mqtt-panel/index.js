@@ -106,6 +106,19 @@ export default class MQTTPanel extends Component {
     }
   }
 
+  renderCertificateAuth() {
+    if(this.state.authMode == AUTH_MODE_CERTIFICATE) {
+      return (
+        <div>
+          <Input label="Certificate" type="file" />
+          <Input label="Key" type="file" />
+        </div>
+      );
+    } else {
+      return "";
+    }
+  }
+
   renderSSLCheckbox() {
     return <input type="checkbox" checked={this.props.ssl ? "checked" : null} disabled={this.state.sslDisabled ? "disabled" : null} onChange={this.onSSLChange.bind(this)} />
   }
@@ -142,6 +155,7 @@ export default class MQTTPanel extends Component {
         </label>
 
         {this.renderUsernameAuth()}
+        {this.renderCertificateAuth()}
        
         <Input label="Publish Channel" type="text" value={this.props.publishChannel} autocomplete="off" autocapitalize="off" onInput={this.onFieldChange('publishChannel').bind(this)} />
         <Input label="Subscribe Channel" type="text" value={this.props.subscribeChannel} autocomplete="off" autocapitalize="off" onInput={this.onFieldChange('subscribeChannel').bind(this)} />
