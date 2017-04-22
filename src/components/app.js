@@ -70,7 +70,7 @@ export default class App extends Component {
         <nav>
           <ul>
             <li><a href="#" onClick={this.changeTab(TAB_SETTINGS).bind(this)}>Settings</a></li>
-            <li><a href="#"onClick={this.changeTab(TAB_FIRMWARE).bind(this)}>Firmware</a></li>
+            <li><a href="#" onClick={this.changeTab(TAB_FIRMWARE).bind(this)}>Firmware</a></li>
           </ul>
         </nav>
 
