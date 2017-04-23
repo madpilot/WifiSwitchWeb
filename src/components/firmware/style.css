@@ -1,5 +1,5 @@
 .panel {
-  composes: panel from '../../modules/panel.css'
+  composes: panel from '../../modules/panel.css';
 }
 
 .heading {

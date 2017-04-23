@@ -1,3 +1,11 @@
+.panel {
+  composes: panel from '../../modules/panel.css';
+}
+
+.heading {
+  composes: heading from '../../modules/panel.css';
+}
+
 .label {
   composes: label from '../../modules/label.css';
 }
@@ -16,4 +24,8 @@
 
 .port {
   composes: port from '../../modules/server-port.css';
+}
+
+.ssl-panel, .auth-panel {
+  margin-bottom: 1rem;
 }

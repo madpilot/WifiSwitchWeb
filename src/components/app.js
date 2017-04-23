@@ -103,7 +103,8 @@ export default class App extends Component {
           </Tab>
           <Tab name={TAB_FIRMWARE} current={this.state.tab}>
             <Firmware />
-						<Button>Upload</Button>
+						
+            <Button>Upload</Button>
           </Tab>
         </form>
       </div>

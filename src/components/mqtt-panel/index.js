@@ -128,17 +128,19 @@ export default class MQTTPanel extends Component {
 
   render() {
     return (
-      <section>
-        <h3>MQTT settings</h3>
+      <section className={styles.panel}>
+        <h3 className={styles.heading}>MQTT settings</h3>
 
         <section class={styles['server-port']}>
           <Input label="Server" type="text" placeholder="server.local" value={this.props.server} autocomplete="off" autocapitalize="off" onInput={this.onFieldChange('server').bind(this)} className={styles.server} />
           <Input label="Port" type="number" placeholder={this.state.portDefault} min="0" max="32768" value={this.state.portChanged ? this.props.port : null} onInput={this.onPortChange.bind(this)} className={styles.port} />
         </section>
 
-        {this.renderSSLCheckbox()}
+       	<section className={styles['ssl-panel']}>
+          {this.renderSSLCheckbox()}
+        </section>
 
-       	<section>
+       	<section className={styles['auth-panel']}>
 					<span className={styles.label}>Authentication</span>
 
           <div className={styles.group}>

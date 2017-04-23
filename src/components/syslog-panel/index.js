@@ -49,8 +49,8 @@ export default class SyslogPanel extends Component {
 
   render() {
     return (
-      <section>
-        <h3>Syslog settings</h3>
+      <section className={styles.panel}>
+        <h3 className={styles.heading}>Syslog settings</h3>
         <BinaryInput label="Send logs to a remote syslog server" type="checkbox" checked={this.props.syslog ? "checked" : null} onChange={this.onSyslogChange.bind(this)} />
         {this.renderForm()}
       </section>

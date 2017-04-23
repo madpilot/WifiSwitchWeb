@@ -1,3 +1,11 @@
+.panel {
+  composes: panel from '../../modules/panel.css';
+}
+
+.heading {
+  composes: heading from '../../modules/panel.css';
+}
+
 .server-port {
   composes: container from '../../modules/server-port.css';
 }

@@ -43,8 +43,8 @@ export default class NetworkPanel extends Component {
 
   render() {
     return (
-      <section>
-        <h3>Network Settings</h3>
+      <section className={styles.panel}>
+        <h3 className={styles.heading}>Network Settings</h3>
         <Input label="Device Name" type="text" placeholder="device" value="" autocomplete="off" autocapitalize="off" value={this.props.deviceName} onInput={this.onFieldChange('deviceName').bind(this)} />
 
 				<div className={styles.group}>
