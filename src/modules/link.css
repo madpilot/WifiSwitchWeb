@@ -1,4 +1,4 @@
-.link, .link:active, .link:visited {
+.link {
   color: #29506D;
   text-decoration: underline;
   composes: link from './animation.css';

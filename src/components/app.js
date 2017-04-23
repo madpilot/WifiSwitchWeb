@@ -70,9 +70,9 @@ export default class App extends Component {
         <Header />
 
         <nav>
-          <ul>
-            <li><a href="#" onClick={this.changeTab(TAB_SETTINGS).bind(this)}>Settings</a></li>
-            <li><a href="#" onClick={this.changeTab(TAB_FIRMWARE).bind(this)}>Firmware</a></li>
+          <ul className={styles.tabs}>
+            <li><a href="#" className={this.state.tab == TAB_SETTINGS ? styles['current-tab'] : styles.tab} onClick={this.changeTab(TAB_SETTINGS).bind(this)}>Settings</a></li>
+            <li><a className={this.state.tab == TAB_FIRMWARE ? styles['current-tab'] : styles.tab} href="#" onClick={this.changeTab(TAB_FIRMWARE).bind(this)}>Firmware</a></li>
           </ul>
         </nav>
 
