@@ -1,3 +1,5 @@
+@value line-height, small, smallest, darker, lighter, lightest from '../modules/variables.css';
+
 html, body, div, span, h1, form, label, section, p, input, a, nav, ul, li {
   margin: 0;
   padding: 0;
@@ -10,22 +12,21 @@ html, body, div, span, h1, form, label, section, p, input, a, nav, ul, li {
 ul, ol { list-style-type: none }
 
 html {
-  color: #333;
-  font-size: 20px;
-  line-height: 20px;
+  color: darker;
+  font-size: line-height;
+  line-height: line-height;
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
 body {
-  font-size: 14px;
+  font-size: small;
   font-style: normal;
   font-variant: normal;
-  font-weight: 400;
-  line-height: 20px;
+  font-weight: normal;
   display: flex;
   height: 100vh;
   width: 100vw;
-  background-color: #efefef;
+  background-color: lighter;
 }
 
 .container {
@@ -33,7 +34,7 @@ body {
   max-width: 20rem;
   margin: auto;
   flex: 1 1 100%;
-  background-color: #fff;
+  background-color: lightest;
   padding: 1rem;
 }
 
@@ -61,21 +62,30 @@ body {
   padding: 0.5rem 1rem;
   text-decoration: none;
   text-transform: uppercase;
-  font-size: 10px;
-  background-color: #efefef;
-  border-radius: 5px 5px 0 0;
-  border: 1px solid #efefef;
+  font-size: smallest;
+  background-color: lighter;
+  border-radius: 3px 3px 0 0;
+  border: 1px solid lighter;
+  border-bottom: 1px solid lighter;
+  transition: background-color linear 0.2s, color linear 0.2s, border-color linear 0.2s;
+}
+
+.tab:hover {
+  background-color: #f8f8f8;
+  border-bottom: 1px solid #f8f8f8;
+  text-decoration: none;
 }
 
 .current-tab {
   composes: tab;
   border-bottom: 0;
-  background-color: #ffffff;
-  border: 1px solid #dedede;
-  border-bottom: 0;
+  background-color: lightest;
+  border: 1px solid lighter;
+  border-bottom: 1px solid lightest;
   transform: scale(1.1);
 }
 
-.tab:hover {
-  text-decoration: none;
+.current-tab:hover {
+  background-color: lightest;
+  border-bottom: 1px solid lightest;
 }

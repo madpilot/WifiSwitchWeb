@@ -69,7 +69,7 @@ export default class WifiPanel extends Component {
 
   render() {
     return (
-      <section>
+      <section className={styles.section}>
         <h3>WiFi Settings</h3>
         {this.renderSSID()}
         {this.renderEncryption()}

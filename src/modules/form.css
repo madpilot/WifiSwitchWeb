@@ -1,3 +1,5 @@
+@value smaller, neutral, lightest, primary, primary-highlight from './variables.css';
+
 .form {
   width: 100%;
   max-width: 15rem;
@@ -7,26 +9,26 @@
 
 .button {
   margin-top: 1rem;
-  background-color: #29506D;
-  color: #fff;
+  background-color: primary;
+  color: lightest;
   border: 0 none;
   text-transform: uppercase;
-  padding: 13px 1rem;
+  padding: smaller 1rem;
   font-weight: 700;
   border-radius: 5px;
 }
 
 .button:disabled {
-  background-color: #aaa;
+  background-color: neutral;
 }
 
 .button:hover {
   transition: background-color linear 0.2s;
-  background-color: #496D89;
+  background-color: primary-highlight;
   cursor: pointer;
 }
 
 .button:disabled:hover {
-  background-color: #aaa;
+  background-color: neutral;
   cursor: default;
 }

@@ -3,11 +3,11 @@
 }
 
 .server {
-  width: calc(66% - 5px);
-  margin-right: 5px;
+  width: calc(66% - 0.25rem);
+  margin-right: 0.25rem;
 }
 
 .port {
-  width: calc(33% - 5px);
-  margin-left: 5px;
+  width: calc(33% - 0.25rem);
+  margin-left: 0.25rem;
 }

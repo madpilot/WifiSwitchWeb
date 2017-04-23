@@ -1,12 +1,16 @@
+@value smaller, primary, primary-highlight from '../../modules/variables.css';
+
 .tab {
-	font-size: 10px;
+	font-size: smaller;
   float: right;
-  color: #84B0D2;
+  color: primary;
   text-decoration: none;
+  composes: animation from '../../modules/animation.css';
 }
 
 .tab:hover {
 	text-decoration: underline;
+  color: primary-highlight;
 }
 
 .label {

@@ -1,11 +1,11 @@
+@value smallest from './variables.css';
+
 .label {
   display: block;
-  padding-top: 5px;
-  margin-bottom: 5px;
+  padding-top: calc(smallest / 2);
+  margin-bottom: calc(smallest / 2);
 }
 
 .inline-label {
-  padding-top: 6.5px;
-  margin-bottom: -6.5px;
   margin-right: 1rem;
 }
