@@ -2,6 +2,7 @@ import { h, Component } from 'preact';
 import Input from '../input';
 import BinaryInput from '../binary-input';
 import styles from './style.css';
+import * as Validation from '../../validation/validator.js';
 
 export default class NetworkPanel extends Component {
   update(state) {
@@ -26,12 +27,17 @@ export default class NetworkPanel extends Component {
 
   renderStaticPanel() {
     if(!this.props.dhcp) {
+      let predicate = ((obj) => {
+        return this.props.dhcp == false;
+      })
+      var validators = [ Validation.required({ predicate: predicate }) ];
+
       return (
         <div>
-          <Input label="IP Address" type="text" autocomplete="off" autocapitalize="off" value={this.props.ipAddress} onInput={this.onFieldChange('ipAddress').bind(this)} />
-          <Input label="DNS Server" type="password" autocomplete="off" autocapitalize="off" value={this.props.dnsServer} onInput={this.onFieldChange('dnsServer').bind(this)} />
-          <Input label="Gateway" type="text" autocomplete="off" autocapitalize="off" value={this.props.gateway} onInput={this.onFieldChange('gateway').bind(this)} />
-          <Input label="Subnet" type="text" autocomplete="off" autocapitalize="off" value={this.props.subnet} onInput={this.onFieldChange('subnet').bind(this)} />
+          <Input label="IP Address" type="text" autocomplete="off" autocapitalize="off" value={this.props.ipAddress} onInput={this.onFieldChange('ipAddress').bind(this)} validators={validators} />
+          <Input label="DNS Server" type="text" autocomplete="off" autocapitalize="off" value={this.props.dnsServer} onInput={this.onFieldChange('dnsServer').bind(this)} validators={validators} />
+          <Input label="Gateway" type="text" autocomplete="off" autocapitalize="off" value={this.props.gateway} onInput={this.onFieldChange('gateway').bind(this)} validators={validators} />
+          <Input label="Subnet" type="text" autocomplete="off" autocapitalize="off" value={this.props.subnet} onInput={this.onFieldChange('subnet').bind(this)} validators={validators} />
         </div>
       );
     } else {
@@ -45,7 +51,7 @@ export default class NetworkPanel extends Component {
     return (
       <section className={styles.panel}>
         <h3 className={styles.heading}>Network Settings</h3>
-        <Input label="Device Name" type="text" placeholder="device" value="" autocomplete="off" autocapitalize="off" value={this.props.deviceName} onInput={this.onFieldChange('deviceName').bind(this)} />
+        <Input label="Device Name" type="text" placeholder="device" value="" autocomplete="off" autocapitalize="off" value={this.props.deviceName} onInput={this.onFieldChange('deviceName').bind(this)} validators={ [ Validation.required() ] }  />
 
 				<div className={styles.group}>
           <BinaryInput type="radio" name="dhcp" label="DHCP" inline={true} value="1" checked={this.props.dhcp ? "checked" : null} onChange={this.onDHCPChange.bind(this)} />

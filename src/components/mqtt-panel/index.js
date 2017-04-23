@@ -2,6 +2,8 @@ import { h, Component } from 'preact';
 import Input from '../input';
 import BinaryInput from '../binary-input';
 
+import * as Validation from '../../validation/validator.js';
+
 const AUTH_MODE_NONE = '0';
 const AUTH_MODE_USERNAME = '1';
 const AUTH_MODE_CERTIFICATE = '2';
@@ -132,7 +134,7 @@ export default class MQTTPanel extends Component {
         <h3 className={styles.heading}>MQTT settings</h3>
 
         <section class={styles['server-port']}>
-          <Input label="Server" type="text" placeholder="server.local" value={this.props.server} autocomplete="off" autocapitalize="off" onInput={this.onFieldChange('server').bind(this)} className={styles.server} />
+          <Input label="Server" type="text" placeholder="server.local" value={this.props.server} autocomplete="off" autocapitalize="off" onInput={this.onFieldChange('server').bind(this)} className={styles.server} validators={[Validation.required()]} />
           <Input label="Port" type="number" placeholder={this.state.portDefault} min="0" max="32768" value={this.state.portChanged ? this.props.port : null} onInput={this.onPortChange.bind(this)} className={styles.port} />
         </section>
 
