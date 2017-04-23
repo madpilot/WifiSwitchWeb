@@ -7,9 +7,16 @@
   padding-bottom: 1rem;
 }
 
-.button {
+.button-wrapper {
   margin-top: 1rem;
-  background-color: primary;
+	width: 100%;
+  height: 2rem;
+}
+
+.button {
+	width: 100%;
+  height: 100%;
+	background-color: primary;
   color: lightest;
   border: 0 none;
   text-transform: uppercase;

@@ -7,6 +7,7 @@ import WifiPanel from './wifi-panel';
 import NetworkPanel from './network-panel';
 import MQTTPanel from './mqtt-panel';
 import SyslogPanel from './syslog-panel';
+import Button from './button';
 
 const TAB_SETTINGS = 0;
 const TAB_FIRMWARE = 1;
@@ -97,9 +98,12 @@ export default class App extends Component {
               {...this.state.syslog}
               onUpdate={this.update('syslog').bind(this)}
               />
+
+						<Button>Save</Button>
           </Tab>
           <Tab name={TAB_FIRMWARE} current={this.state.tab}>
             <Firmware />
+						<Button>Upload</Button>
           </Tab>
         </form>
       </div>
