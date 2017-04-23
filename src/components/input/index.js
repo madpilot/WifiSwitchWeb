@@ -10,9 +10,15 @@ export default class Input extends Component {
   render() {
     let props = Object.assign({}, this.props);
     delete props['label'];
+    delete props['className'];
+
+    let className = styles.container;
+    if(this.props.className) {
+      className += " " + this.props.className;
+    }
 
     return (
-      <div className={styles.container}>
+      <div className={className}>
         <label for={this._id} className={styles.label}>
           {this.props.label}
         </label>

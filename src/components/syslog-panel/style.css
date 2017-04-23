@@ -1,0 +1,11 @@
+.server-port {
+  composes: container from '../../modules/server-port.css';
+}
+
+.server {
+  composes: server from '../../modules/server-port.css';
+}
+
+.port {
+  composes: port from '../../modules/server-port.css';
+}

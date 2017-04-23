@@ -1,0 +1,13 @@
+.container {
+  display: flex;
+}
+
+.server {
+  width: calc(66% - 5px);
+  margin-right: 5px;
+}
+
+.port {
+  width: calc(33% - 5px);
+  margin-left: 5px;
+}
