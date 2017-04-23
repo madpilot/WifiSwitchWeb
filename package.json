@@ -2,7 +2,7 @@
   "name": "WifiSwitchConfig",
   "version": "1.0.0",
   "description": "Configuration Webpage for the Wifi Switch",
-  "main": "webpack.config.babel.js",
+  "main": "webpack.config.js",
   "repository": "https://github.com/madpilot/WifiSwitchConfig",
   "author": "Myles Eftos",
   "license": "MIT",

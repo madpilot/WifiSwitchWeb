@@ -60,7 +60,9 @@ module.exports = {
 		}),
     new HtmlWebpackInlineSourcePlugin()
 	]).concat(ENV === 'production' ? [
-    new CssoWebpackPlugin({ sourceMap: true }),
+    new CssoWebpackPlugin({ 
+      sourceMap: false
+    }),
 		new webpack.optimize.UglifyJsPlugin({
       mangle: true,
 			output: {
