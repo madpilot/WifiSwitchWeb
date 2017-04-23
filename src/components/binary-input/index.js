@@ -12,14 +12,10 @@ export default class Input extends Component {
     delete props['label'];
 
     return (
-      <div className={styles.container}>
-        <label for={this._id} className={styles.label}>
-          {this.props.label}
-        </label>
-        <span className={styles.wrapper}>
-          <input id={this._id} {...props} className={styles.input} />
-        </span>
-      </div>
+      <label for={this._id} className={styles.label}>
+        <input id={this._id} {...props} className={styles.input} />
+        {this.props.label}
+      </label>
     );
   }
 }

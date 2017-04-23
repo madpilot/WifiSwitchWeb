@@ -35,6 +35,7 @@ export default class Select extends Component {
     return (
       <div>
         {this.renderLabel()}
+
         <span className={styles.wrapper}>
           <select {...this.props} className={styles.select}>
             {this.props.children.map((c) => { return this.renderOption(c) })}

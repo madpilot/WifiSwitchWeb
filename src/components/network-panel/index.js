@@ -1,5 +1,7 @@
 import { h, Component } from 'preact';
 import Input from '../input';
+import BinaryInput from '../binary-input';
+import styles from './style.css';
 
 export default class NetworkPanel extends Component {
   update(state) {
@@ -45,15 +47,9 @@ export default class NetworkPanel extends Component {
         <h3>Network Settings</h3>
         <Input label="Device Name" type="text" placeholder="device" value="" autocomplete="off" autocapitalize="off" value={this.props.deviceName} onInput={this.onFieldChange('deviceName').bind(this)} />
 
-				<div>
-					<label>
-						<input type="radio" name="dhcp" value="1" checked={this.props.dhcp ? "checked" : null} onChange={this.onDHCPChange.bind(this)} />
-						DHCP
-					</label>
-					<label>
-						<input type="radio" name="dhcp" value="0" checked={this.props.dhcp ? null : "checked"} onChange={this.onDHCPChange.bind(this)} />
-						Static
-					</label>
+				<div className={styles.group}>
+          <BinaryInput type="radio" name="dhcp" label="DHCP" inline={true} value="1" checked={this.props.dhcp ? "checked" : null} onChange={this.onDHCPChange.bind(this)} />
+          <BinaryInput type="radio" name="dhcp" label="Static" inline={true} value="0" checked={this.props.dhcp ? null : "checked"} onChange={this.onDHCPChange.bind(this)} />
 				</div>
 
         {this.renderStaticPanel()}

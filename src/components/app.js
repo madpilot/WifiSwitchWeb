@@ -11,7 +11,7 @@ import SyslogPanel from './syslog-panel';
 const TAB_SETTINGS = 0;
 const TAB_FIRMWARE = 1;
 
-import styles from '../modules/app.css';
+import styles from './app.css';
 
 export default class App extends Component {
   constructor() {
@@ -76,7 +76,7 @@ export default class App extends Component {
           </ul>
         </nav>
 
-        <form>
+        <form class={styles.form}>
           <Tab name={TAB_SETTINGS} current={this.state.tab}>
             <WifiPanel
               {...this.state.wifi}

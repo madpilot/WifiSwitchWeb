@@ -41,3 +41,7 @@ body {
     border-radius: 3px;
   }
 }
+
+.form {
+  composes: form from '../modules/form.css';
+}
