@@ -1,10 +1,12 @@
 import { h, Component } from 'preact';
 
+import styles from './style.css';
+
 export default class FirmwarePanel extends Component {
   render() {
     if(this.props.current == this.props.name) {
       return (
-        <div>
+        <div className={styles.container}>
           {this.props.children}
         </div>
       );

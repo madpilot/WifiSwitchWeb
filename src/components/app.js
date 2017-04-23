@@ -7,9 +7,12 @@ import WifiPanel from './wifi-panel';
 import NetworkPanel from './network-panel';
 import MQTTPanel from './mqtt-panel';
 import SyslogPanel from './syslog-panel';
+import Button from './button';
 
 const TAB_SETTINGS = 0;
 const TAB_FIRMWARE = 1;
+
+import styles from './app.css';
 
 export default class App extends Component {
   constructor() {
@@ -64,23 +67,23 @@ export default class App extends Component {
 
   render() {
     return (
-      <div id="app">
+      <div id="app" className={styles.container}>
         <Header />
 
         <nav>
-          <ul>
-            <li><a href="#" onClick={this.changeTab(TAB_SETTINGS).bind(this)}>Settings</a></li>
-            <li><a href="#" onClick={this.changeTab(TAB_FIRMWARE).bind(this)}>Firmware</a></li>
+          <ul className={styles.tabs}>
+            <li><a href="#" className={this.state.tab == TAB_SETTINGS ? styles['current-tab'] : styles.tab} onClick={this.changeTab(TAB_SETTINGS).bind(this)}>Settings</a></li>
+            <li><a className={this.state.tab == TAB_FIRMWARE ? styles['current-tab'] : styles.tab} href="#" onClick={this.changeTab(TAB_FIRMWARE).bind(this)}>Firmware</a></li>
           </ul>
         </nav>
 
-        <form>
+        <form class={styles.form}>
           <Tab name={TAB_SETTINGS} current={this.state.tab}>
             <WifiPanel
               {...this.state.wifi}
               onUpdate={this.update('wifi').bind(this)}
               />
-            
+
             <NetworkPanel
               {...this.state.network}
               onUpdate={this.update('network').bind(this)}
@@ -95,9 +98,13 @@ export default class App extends Component {
               {...this.state.syslog}
               onUpdate={this.update('syslog').bind(this)}
               />
+
+						<Button>Save</Button>
           </Tab>
           <Tab name={TAB_FIRMWARE} current={this.state.tab}>
             <Firmware />
+						
+            <Button>Upload</Button>
           </Tab>
         </form>
       </div>

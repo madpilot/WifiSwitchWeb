@@ -15,25 +15,13 @@ const types = [
 ];
 
 export default class Encryption extends Component {
-  constructor() {
-    super();
-    this._id = "encryption_" + Math.random().toString(36).substring(2, 7);
-  }
-
   render() {
     return (
-      <div>
-        <label for={this._id}>
-          Security
-        </label>
-        <span>
-          <Select id={this._id} onChange={(e) => this.props.onChange(e.target.value)} value={this.props.selected}>
-            {types.map((type) => {
-              return <option value={type[0]}>{type[1]}</option>
-            })}
-          </Select>
-        </span>
-      </div>
+      <Select label="Security" onChange={(e) => this.props.onChange(e.target.value)} value={this.props.selected}>
+        {types.map((type) => {
+          return <option value={type[0]}>{type[1]}</option>
+        })}
+      </Select>
     );
   }
 }

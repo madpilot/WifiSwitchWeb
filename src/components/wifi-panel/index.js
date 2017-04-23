@@ -3,6 +3,8 @@ import SSID from '../ssid';
 import Encryption from '../encryption';
 import Input from '../input';
 
+import styles from './style.css';
+
 export default class WifiPanel extends Component {
   constructor(props) {
     super(props);
@@ -39,13 +41,13 @@ export default class WifiPanel extends Component {
   }
 
   renderSSID() {
-    return <SSID 
-            ssid={this.state.ssid} 
-            encryption={this.state.encryption} 
-            passkey={this.state.passkey} 
-            scan={this.state.scan} 
-            onModeChange={this.toggleScan.bind(this)} 
-            onChange={this.updateAP.bind(this)} 
+    return <SSID
+            ssid={this.state.ssid}
+            encryption={this.state.encryption}
+            passkey={this.state.passkey}
+            scan={this.state.scan}
+            onModeChange={this.toggleScan.bind(this)}
+            onChange={this.updateAP.bind(this)}
             />
   }
 
@@ -67,8 +69,8 @@ export default class WifiPanel extends Component {
 
   render() {
     return (
-      <section>
-        <h3>WiFi Settings</h3>
+      <section className={styles.panel}>
+        <h3 className={styles.heading}>WiFi Settings</h3>
         {this.renderSSID()}
         {this.renderEncryption()}
         {this.renderPasskey()}

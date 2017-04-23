@@ -3,11 +3,13 @@ import { h, Component } from 'preact';
 const SCANNING = 0;
 const SCANNING_COMPLETE = 1;
 
+import styles from './style.css';
+
 export default class SSID extends Component {
   constructor(props) {
     super(props);
     this._id = "ssid_" + Math.random().toString(36).substring(2, 7);
-    
+
     this.state = {
       connection: SCANNING_COMPLETE,
       scanned: {
@@ -46,7 +48,7 @@ export default class SSID extends Component {
 
   changeAp = e => {
     let ap = this.state.aps.filter((ap) => ap.ssid == e.target.value);
-    
+
     if(ap.length > 0) {
       this.setScannedState({ ssid: ap[0].ssid, encryption: ap[0].encryption })
     }
@@ -66,7 +68,7 @@ export default class SSID extends Component {
 
   renderAps() {
     return (
-      <select id={this._id} onChange={this.changeAp.bind(this)}>
+      <select id={this._id} onChange={this.changeAp.bind(this)} className={styles.select}>
         {this.state.aps.map((ap) => {
           return (
             <option value={ap.ssid} key={ap.ssid} selected={this.state.scanned.ssid == ap.ssid ? "selected" : null}>{ap.ssid}</option>
@@ -78,13 +80,14 @@ export default class SSID extends Component {
 
   renderManual() {
     return (
-      <input 
+      <input
         type="text"
-        autocomplete="off" 
-        autocapitalize="off" 
-        value={this.state.manual.ssid} 
-        id={this._id} 
-        onInput={this.changeManualSSID.bind(this)} />
+        autocomplete="off"
+        autocapitalize="off"
+        value={this.state.manual.ssid}
+        id={this._id}
+        onInput={this.changeManualSSID.bind(this)}
+				className={styles.input} />
     );
   }
 
@@ -108,20 +111,20 @@ export default class SSID extends Component {
 
   renderToggle() {
     if(this.props.scan) {
-      return <a href="#" onClick={this.setManualMode}>Join another network</a>
+      return <a href="#" onClick={this.setManualMode} className={styles.tab}>Join another network</a>
     } else {
-      return <a href="#" onClick={this.setScanMode}>Scan for networks</a>
+      return <a href="#" onClick={this.setScanMode} className={styles.tab}>Scan for networks</a>
     }
   }
 
   render() {
     return (
       <div>
-        <label for={this._id}>
+        <label for={this._id} className={styles.label}>
           Name
           {this.renderToggle()}
         </label>
-        <span>
+        <span className={styles.wrapper}>
           {this.renderInput()}
         </span>
       </div>
