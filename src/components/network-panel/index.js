@@ -27,10 +27,7 @@ export default class NetworkPanel extends Component {
 
   renderStaticPanel() {
     if(!this.props.dhcp) {
-      let predicate = ((obj) => {
-        return this.props.dhcp == false;
-      })
-      var validators = [ Validation.required({ predicate: predicate }) ];
+      var validators = [ Validation.required() ];
 
       return (
         <div>

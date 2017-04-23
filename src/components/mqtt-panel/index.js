@@ -100,12 +100,14 @@ export default class MQTTPanel extends Component {
 
   renderUsernameAuth() {
     if(this.state.authMode == AUTH_MODE_USERNAME) {
-        return (
-          <div>
-            <Input label="Username" type="text" autocomplete="off" value={this.props.username} autocapitalize="off" onInput={this.onFieldChange('username').bind(this)} />
-            <Input label="Password" type="password" autocomplete="off" value={this.props.password} autocapitalize="off" onInput={this.onFieldChange('password').bind(this)} />
-          </div>
-         );
+      var validators = [ Validation.required() ];
+
+      return (
+        <div>
+          <Input label="Username" type="text" autocomplete="off" value={this.props.username} autocapitalize="off" onInput={this.onFieldChange('username').bind(this)} validators={validators} />
+          <Input label="Password" type="password" autocomplete="off" value={this.props.password} autocapitalize="off" onInput={this.onFieldChange('password').bind(this)} validators={validators} />
+        </div>
+       );
     } else {
       return "";
     }
@@ -156,8 +158,8 @@ export default class MQTTPanel extends Component {
         {this.renderCertificateAuth()}
 
         <section>
-          <Input label="Publish Channel" type="text" value={this.props.publishChannel} autocomplete="off" autocapitalize="off" onInput={this.onFieldChange('publishChannel').bind(this)} />
-          <Input label="Subscribe Channel" type="text" value={this.props.subscribeChannel} autocomplete="off" autocapitalize="off" onInput={this.onFieldChange('subscribeChannel').bind(this)} />
+          <Input label="Publish Channel" type="text" value={this.props.publishChannel} autocomplete="off" autocapitalize="off" onInput={this.onFieldChange('publishChannel').bind(this)} validators={ [ Validation.required() ] }  />
+          <Input label="Subscribe Channel" type="text" value={this.props.subscribeChannel} autocomplete="off" autocapitalize="off" onInput={this.onFieldChange('subscribeChannel').bind(this)} validators={ [ Validation.required() ] } />
         </section>
       </section>
     );

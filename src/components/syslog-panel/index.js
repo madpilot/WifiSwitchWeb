@@ -3,6 +3,8 @@ import Input from '../input';
 import BinaryInput from '../binary-input';
 import Select from '../select';
 
+import * as Validation from '../../validation/validator.js';
+
 import styles from './style.css';
 
 export default class SyslogPanel extends Component {
@@ -30,10 +32,12 @@ export default class SyslogPanel extends Component {
     const levels = ["Emergency", "Alert", "Critical", "Error", "Warning", "Notice", "Information", "Debug"]
 
     if(this.props.syslog) {
+      var validators = [ Validation.required() ];
+
       return (
         <div>
           <section class={styles['server-port']}>
-            <Input label="Server" type="text" placeholder="server.local" value="" autocomplete="off" autocapitalize="off" value={this.props.server} onInput={this.onFieldChange('server').bind(this)} className={styles.server}  />
+            <Input label="Server" type="text" placeholder="server.local" value="" autocomplete="off" autocapitalize="off" value={this.props.server} onInput={this.onFieldChange('server').bind(this)} className={styles.server} validators={validators}   />
             <Input label="Port" type="number" placeholder="514" min="0" max="32768" value="514" value={this.props.port} onInput={this.onFieldChange('port').bind(this)} className={styles.port}  />
           </section>
 
