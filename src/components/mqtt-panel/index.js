@@ -40,6 +40,8 @@ export default class MQTTPanel extends Component {
       port: this.props.port,
       authMode: this.props.authMode,
       ssl: this.props.ssl,
+      username: this.props.username,
+      password: this.props.password,
       publishChannel: this.props.publishChannel,
       subscribeChannel: this.props.subscribeChannel
     });
