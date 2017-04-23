@@ -1,4 +1,5 @@
 import webpack from 'webpack';
+import ExtractTextPlugin from 'extract-text-webpack-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import HtmlWebpackInlineSourcePlugin from 'html-webpack-inline-source-plugin';
 import ReplacePlugin from 'replace-bundle-webpack-plugin';
@@ -31,6 +32,13 @@ module.exports = {
 				exclude: /node_modules/,
 				loader: 'babel-loader'
 			},
+      {
+        test: /\.css$/,
+        use: ExtractTextPlugin.extract({
+          fallback: "style-loader",
+          use: "css-loader?modules&localIdentName=[name]__[local]___[hash:base64:5]"
+        })
+      },
 			{
 				test: /\.(xml|html|txt|md)$/,
 				loader: 'raw-loader'
@@ -43,6 +51,7 @@ module.exports = {
 		new webpack.DefinePlugin({
 			'process.env.NODE_ENV': JSON.stringify(ENV)
 		}),
+    new ExtractTextPlugin({ filename: 'style.css', allChunks: true, disable: ENV !== 'production' }),
 		new HtmlWebpackPlugin({
 			template: './index.ejs',
 			minify: { collapseWhitespace: true },

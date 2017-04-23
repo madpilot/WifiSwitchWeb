@@ -11,6 +11,8 @@ import SyslogPanel from './syslog-panel';
 const TAB_SETTINGS = 0;
 const TAB_FIRMWARE = 1;
 
+import styles from '../modules/app.css';
+
 export default class App extends Component {
   constructor() {
     super();
@@ -64,7 +66,7 @@ export default class App extends Component {
 
   render() {
     return (
-      <div id="app">
+      <div id="app" className={styles.container}>
         <Header />
 
         <nav>
@@ -80,7 +82,7 @@ export default class App extends Component {
               {...this.state.wifi}
               onUpdate={this.update('wifi').bind(this)}
               />
-            
+
             <NetworkPanel
               {...this.state.network}
               onUpdate={this.update('network').bind(this)}

@@ -1,0 +1,32 @@
+.form {
+  width: 100%;
+  max-width: 15rem;
+  margin: 0 auto;
+  padding-bottom: 1rem;
+}
+
+.button {
+  margin-top: 1rem;
+  background-color: #29506D;
+  color: #fff;
+  border: 0 none;
+  text-transform: uppercase;
+  padding: 13px 1rem;
+  font-weight: 700;
+  border-radius: 5px;
+}
+
+.button:disabled {
+  background-color: #aaa;
+}
+
+.button:hover {
+  transition: background-color linear 0.2s;
+  background-color: #496D89;
+  cursor: pointer;
+}
+
+.button:disabled:hover {
+  background-color: #aaa;
+  cursor: default;
+}

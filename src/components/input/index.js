@@ -1,4 +1,5 @@
 import { h, Component } from 'preact';
+import styles from './style.css';
 
 export default class Input extends Component {
   constructor() {
@@ -12,11 +13,11 @@ export default class Input extends Component {
 
     return (
       <div>
-        <label for={this._id}>
+        <label for={this._id} className={styles.label}>
           {this.props.label}
         </label>
-        <span>
-          <input id={this._id} {...props} />
+        <span className={styles.wrapper}>
+          <input id={this._id} {...props} className={styles.input} />
         </span>
       </div>
     );

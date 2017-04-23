@@ -14,20 +14,14 @@ const types = [
   [ WPA2, "WPA2 Personal" ]
 ];
 
-export default class Encryption extends Component {
-  constructor() {
-    super();
-    this._id = "encryption_" + Math.random().toString(36).substring(2, 7);
-  }
+import styles from './style.css';
 
+export default class Encryption extends Component {
   render() {
     return (
       <div>
-        <label for={this._id}>
-          Security
-        </label>
         <span>
-          <Select id={this._id} onChange={(e) => this.props.onChange(e.target.value)} value={this.props.selected}>
+          <Select label="Security" onChange={(e) => this.props.onChange(e.target.value)} value={this.props.selected} className={styles.select}>
             {types.map((type) => {
               return <option value={type[0]}>{type[1]}</option>
             })}
