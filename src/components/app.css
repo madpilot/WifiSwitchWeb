@@ -1,4 +1,4 @@
-@value line-height, small, smallest, darker, lighter, lightest from '../modules/variables.css';
+@value line-height, small, smallest, darker, lighter, lighter-highlight, lightest from '../modules/variables.css';
 
 html, body, div, span, h1, form, label, section, p, input, a, nav, ul, li {
   margin: 0;
@@ -23,8 +23,6 @@ body {
   font-style: normal;
   font-variant: normal;
   font-weight: normal;
-  display: flex;
-  height: 100vh;
   width: 100vw;
   background-color: lighter;
 }
@@ -32,8 +30,7 @@ body {
 .container {
   width: 100%;
   max-width: 20rem;
-  margin: auto;
-  flex: 1 1 100%;
+  margin: 1rem auto;
   background-color: lightest;
   padding: 1rem;
 }
@@ -71,8 +68,8 @@ body {
 }
 
 .tab:hover {
-  background-color: #f8f8f8;
-  border-bottom: 1px solid #f8f8f8;
+  background-color: lighter-highlight;
+  border-bottom: 1px solid lighter-highlight;
   text-decoration: none;
 }
 
