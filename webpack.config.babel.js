@@ -1,5 +1,6 @@
 import webpack from 'webpack';
 import ExtractTextPlugin from 'extract-text-webpack-plugin';
+import CssoWebpackPlugin from 'csso-webpack-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import HtmlWebpackInlineSourcePlugin from 'html-webpack-inline-source-plugin';
 import ReplacePlugin from 'replace-bundle-webpack-plugin';
@@ -36,7 +37,7 @@ module.exports = {
         test: /\.css$/,
         use: ExtractTextPlugin.extract({
           fallback: "style-loader",
-          use: "css-loader?modules&localIdentName=[name]__[local]___[hash:base64:5]"
+          use: "css-loader?modules&localIdentName=" + (ENV == 'production' ? "[hash:base64:4]" : "[name]__[local]___[hash:base64:5]")
         })
       },
 			{
@@ -59,6 +60,7 @@ module.exports = {
 		}),
     new HtmlWebpackInlineSourcePlugin()
 	]).concat(ENV === 'production' ? [
+    new CssoWebpackPlugin({ sourceMap: true }),
 		new webpack.optimize.UglifyJsPlugin({
       mangle: true,
 			output: {
