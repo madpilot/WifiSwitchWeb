@@ -74,7 +74,7 @@ describe("\<Button>", () => {
     });
 
     describe("supplied className", () => {
-      beforeEach(() => { console.log('supplied'); className = 'supplied' });
+      beforeEach(() => { className = 'supplied' });
 
       it("adds the classname", () => {
         expect(button()).to.eql(<div class="container supplied"><button class="button">Test</button></div>);
