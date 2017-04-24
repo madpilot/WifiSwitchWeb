@@ -2,9 +2,11 @@ import { h, Component } from 'preact';
 import SSID from '../ssid';
 import Encryption from '../encryption';
 import Input from '../input';
+import * as Validation from '../../validation/validator.js';
 
 import styles from './style.css';
 
+const textValidators = [ Validation.required(), Validation.length(255) ];
 export default class WifiPanel extends Component {
   constructor(props) {
     super(props);
@@ -61,7 +63,15 @@ export default class WifiPanel extends Component {
 
   renderPasskey() {
     if(this.state.encryption != "7") {
-      return <Input label="Password" type="password" value={this.state.passkey} autocomplete="off" autocapitalize="off" onChange={this.changePasskey.bind(this)} />
+      return <Input
+              label="Password"
+              type="password"
+              value={this.state.passkey}
+              autocomplete="off"
+              autocapitalize="off"
+              onChange={this.changePasskey.bind(this)}
+              validators={textValidators}
+              />
     } else {
       return "";
     }

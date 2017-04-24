@@ -13,6 +13,7 @@ const MQTT_SECURE_PORT = 8883;
 
 import styles from './style.css';
 
+const textValidators = [ Validation.required(), Validation.length(255) ];
 export default class MQTTPanel extends Component {
   constructor(props) {
     super(props);
@@ -102,12 +103,26 @@ export default class MQTTPanel extends Component {
 
   renderUsernameAuth() {
     if(this.state.authMode == AUTH_MODE_USERNAME) {
-      var validators = [ Validation.required() ];
-
       return (
         <div>
-          <Input label="Username" type="text" autocomplete="off" value={this.props.username} autocapitalize="off" onInput={this.onFieldChange('username').bind(this)} validators={validators} />
-          <Input label="Password" type="password" autocomplete="off" value={this.props.password} autocapitalize="off" onInput={this.onFieldChange('password').bind(this)} validators={validators} />
+          <Input
+            label="Username"
+            type="text"
+            autocomplete="off"
+            autocapitalize="off"
+            value={this.props.username}
+            onInput={this.onFieldChange('username').bind(this)}
+            validators={textValidators}
+          />
+
+          <Input
+            label="Password"
+            type="password"
+            autocomplete="off"
+            autocapitalize="off"
+            value={this.props.password}
+            onInput={this.onFieldChange('password').bind(this)}
+            validators={textValidators} />
         </div>
        );
     } else {
@@ -129,7 +144,13 @@ export default class MQTTPanel extends Component {
   }
 
   renderSSLCheckbox() {
-    return <BinaryInput label="Use SSL" type="checkbox" checked={this.props.ssl ? "checked" : null} disabled={this.state.sslDisabled ? "disabled" : null} onChange={this.onSSLChange.bind(this)} />
+    return <BinaryInput
+      label="Use SSL"
+      type="checkbox"
+      checked={this.props.ssl ? "checked" : null}
+      disabled={this.state.sslDisabled ? "disabled" : null}
+      onChange={this.onSSLChange.bind(this)}
+      />
   }
 
   render() {
@@ -138,8 +159,28 @@ export default class MQTTPanel extends Component {
         <h3 className={styles.heading}>MQTT settings</h3>
 
         <section class={styles['server-port']}>
-          <Input label="Server" type="text" placeholder="server.local" value={this.props.server} autocomplete="off" autocapitalize="off" onInput={this.onFieldChange('server').bind(this)} className={styles.server} validators={[Validation.required()]} />
-          <Input label="Port" type="number" placeholder={this.state.portDefault} min="0" max="32768" value={this.state.portChanged ? this.props.port : null} onInput={this.onPortChange.bind(this)} className={styles.port} />
+          <Input
+            label="Server"
+            type="text"
+            placeholder="server.local"
+            value={this.props.server}
+            autocomplete="off"
+            autocapitalize="off"
+            onInput={this.onFieldChange('server').bind(this)}
+            className={styles.server}
+            validators={textValidators}
+            />
+
+          <Input
+            label="Port"
+            type="number"
+            placeholder={this.state.portDefault}
+            min="0"
+            max="32768"
+            value={this.state.portChanged ? this.props.port : null}
+            onInput={this.onPortChange.bind(this)}
+            className={styles.port}
+            />
         </section>
 
        	<section className={styles['ssl-panel']}>
@@ -150,9 +191,16 @@ export default class MQTTPanel extends Component {
 					<span className={styles.label}>Authentication</span>
 
           <div className={styles.group}>
-            <BinaryInput label="None" type="radio" name="mqttAuthMode" value={AUTH_MODE_NONE} checked={this.state.authMode == AUTH_MODE_NONE ? "checked" : null} onChange={this.onAuthModeChange.bind(this)} />
-            <BinaryInput label="Username" type="radio" name="mqttAuthMode" value={AUTH_MODE_USERNAME} checked={this.state.authMode == AUTH_MODE_USERNAME ? "checked" : null} onChange={this.onAuthModeChange.bind(this)} />
-            <BinaryInput label="Certificate" type="radio" name="mqttAuthMode" value={AUTH_MODE_CERTIFICATE} checked={this.state.authMode == AUTH_MODE_CERTIFICATE ? "checked" : null} onChange={this.onAuthModeChange.bind(this)} />
+            {[ AUTH_MODE_NONE, AUTH_MODE_USERNAME, AUTH_MODE_CERTIFICATE ].map((mode) => {
+              <BinaryInput
+                label="None"
+                type="radio"
+                name="mqttAuthMode"
+                value={mode}
+                checked={this.state.authMode == mode ? "checked" : null}
+                onChange={this.onAuthModeChange.bind(this)}
+                />
+            })}
           </div>
         </section>
 
@@ -160,8 +208,25 @@ export default class MQTTPanel extends Component {
         {this.renderCertificateAuth()}
 
         <section>
-          <Input label="Publish Channel" type="text" value={this.props.publishChannel} autocomplete="off" autocapitalize="off" onInput={this.onFieldChange('publishChannel').bind(this)} validators={ [ Validation.required() ] }  />
-          <Input label="Subscribe Channel" type="text" value={this.props.subscribeChannel} autocomplete="off" autocapitalize="off" onInput={this.onFieldChange('subscribeChannel').bind(this)} validators={ [ Validation.required() ] } />
+          <Input
+            label="Publish Channel"
+            type="text"
+            value={this.props.publishChannel}
+            autocomplete="off"
+            autocapitalize="off"
+            onInput={this.onFieldChange('publishChannel').bind(this)}
+            validators={textValidators}
+            />
+
+          <Input
+            label="Subscribe Channel"
+            type="text"
+            value={this.props.subscribeChannel}
+            autocomplete="off"
+            autocapitalize="off"
+            onInput={this.onFieldChange('subscribeChannel').bind(this)}
+            validators={textValidators}
+            />
         </section>
       </section>
     );

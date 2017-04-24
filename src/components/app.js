@@ -9,6 +9,8 @@ import MQTTPanel from './mqtt-panel';
 import SyslogPanel from './syslog-panel';
 import Button from './button';
 
+import Form from '../validation/form';
+
 const TAB_SETTINGS = 0;
 const TAB_FIRMWARE = 1;
 
@@ -77,8 +79,8 @@ export default class App extends Component {
           </ul>
         </nav>
 
-        <form class={styles.form}>
-          <Tab name={TAB_SETTINGS} current={this.state.tab}>
+        <Tab name={TAB_SETTINGS} current={this.state.tab}>
+          <Form class={styles.form}>
             <WifiPanel
               {...this.state.wifi}
               onUpdate={this.update('wifi').bind(this)}
@@ -99,14 +101,15 @@ export default class App extends Component {
               onUpdate={this.update('syslog').bind(this)}
               />
 
-						<Button>Save</Button>
-          </Tab>
-          <Tab name={TAB_FIRMWARE} current={this.state.tab}>
+            <Button>Save</Button>
+          </Form>
+        </Tab>
+        <Tab name={TAB_FIRMWARE} current={this.state.tab}>
+          <Form class={styles.form}>
             <Firmware />
-						
             <Button>Upload</Button>
-          </Tab>
-        </form>
+          </Form>
+        </Tab>
       </div>
     )
   }

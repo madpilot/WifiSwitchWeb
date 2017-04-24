@@ -1,4 +1,4 @@
-@value smaller, primary, primary-highlight from '../../modules/variables.css';
+@value smaller, primary, primary-highlight, error from '../../modules/variables.css';
 
 .tab {
 	font-size: smaller;
@@ -27,4 +27,13 @@
 
 .select {
 	composes: input from '../../modules/input.css';
+}
+
+.error {
+  color: error;
+  font-size: smaller;
+}
+
+.error:before {
+  content: " ";
 }
