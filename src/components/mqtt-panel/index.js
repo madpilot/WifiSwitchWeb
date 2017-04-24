@@ -154,6 +154,12 @@ export default class MQTTPanel extends Component {
   }
 
   render() {
+    const authModes = [
+      [ AUTH_MODE_NONE, "None" ],
+      [ AUTH_MODE_USERNAME, "Username" ],
+      [ AUTH_MODE_CERTIFICATE, "Certificate" ]
+    ]
+
     return (
       <section className={styles.panel}>
         <h3 className={styles.heading}>MQTT settings</h3>
@@ -191,13 +197,13 @@ export default class MQTTPanel extends Component {
 					<span className={styles.label}>Authentication</span>
 
           <div className={styles.group}>
-            {[ AUTH_MODE_NONE, AUTH_MODE_USERNAME, AUTH_MODE_CERTIFICATE ].map((mode) => {
-              <BinaryInput
-                label="None"
+            {(authModes).map((mode) => {
+              return <BinaryInput
+                label={mode[1]}
                 type="radio"
                 name="mqttAuthMode"
-                value={mode}
-                checked={this.state.authMode == mode ? "checked" : null}
+                value={mode[0]}
+                checked={this.state.authMode == mode[0] ? "checked" : null}
                 onChange={this.onAuthModeChange.bind(this)}
                 />
             })}
