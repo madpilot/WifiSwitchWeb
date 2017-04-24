@@ -15,7 +15,7 @@ export default class Button extends Component {
 
     return (
       <div className={containerClassName}>
-        <button className={styles.button} disabled={disabled}>{this.props.children}</button>
+        <button className={styles.button} disabled={disabled ? "disabled" : null}>{this.props.children}</button>
       </div>
     );
   }
