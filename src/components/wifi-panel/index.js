@@ -22,6 +22,8 @@ export default class WifiPanel extends Component {
   updateAP(state) {
     this.setState(state);
 
+    console.log(this.state);
+
     this.props.onUpdate({
       scan: this.state.scan,
       ssid: this.state.ssid,
@@ -30,8 +32,8 @@ export default class WifiPanel extends Component {
     });
   }
 
-  changePasskey(value) {
-    this.updateAP({ passkey: value });
+  changePasskey(e) {
+    this.updateAP({ passkey: e.target.value });
   }
 
   changeEncryption(value) {
@@ -57,7 +59,10 @@ export default class WifiPanel extends Component {
     if(this.state.scan) {
       return '';
     } else {
-      return <Encryption selected={this.state.encryption} onChange={this.changeEncryption.bind(this)} />
+      return <Encryption
+        selected={this.state.encryption}
+        onChange={this.changeEncryption.bind(this)}
+        />
     }
   }
 
@@ -69,7 +74,7 @@ export default class WifiPanel extends Component {
               value={this.state.passkey}
               autocomplete="off"
               autocapitalize="off"
-              onChange={this.changePasskey.bind(this)}
+              onInput={this.changePasskey.bind(this)}
               validators={textValidators}
               />
     } else {

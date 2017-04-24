@@ -7,6 +7,7 @@ const SCANNING_COMPLETE = 1;
 import styles from './style.css';
 const textValidators = [ Validation.required(), Validation.length(255) ];
 
+// This needs a refactor
 export default class SSID extends Component {
   constructor(props) {
     super(props);
