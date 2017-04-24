@@ -37,8 +37,27 @@ export default class SyslogPanel extends Component {
       return (
         <div>
           <section class={styles['server-port']}>
-            <Input label="Server" type="text" placeholder="server.local" value="" autocomplete="off" autocapitalize="off" value={this.props.server} onInput={this.onFieldChange('server').bind(this)} className={styles.server} validators={validators}   />
-            <Input label="Port" type="number" placeholder="514" min="0" max="32768" value="514" value={this.props.port} onInput={this.onFieldChange('port').bind(this)} className={styles.port}  />
+            <Input
+              label="Server" 
+              type="text" 
+              placeholder="server.local" 
+              autocomplete="off" 
+              autocapitalize="off" 
+              value={this.props.server} 
+              onInput={this.onFieldChange('server').bind(this)} 
+              className={styles.server} 
+              validators={validators}
+              />
+
+            <Input 
+              label="Port" 
+              type="number" 
+              placeholder="514" 
+              min="0" 
+              max="32768" 
+              value={this.props.port} 
+              onInput={this.onFieldChange('port').bind(this)} 
+              className={styles.port} />
           </section>
 
           <Select label="Level" onInput={this.onFieldChange('level').bind(this)} value={this.props.level}>
@@ -55,7 +74,11 @@ export default class SyslogPanel extends Component {
     return (
       <section className={styles.panel}>
         <h3 className={styles.heading}>Syslog settings</h3>
-        <BinaryInput label="Send logs to a remote syslog server" type="checkbox" checked={this.props.syslog ? "checked" : null} onChange={this.onSyslogChange.bind(this)} />
+        <BinaryInput 
+          label="Send logs to a remote syslog server" 
+          type="checkbox" 
+          checked={this.props.syslog ? "checked" : null} 
+          onChange={this.onSyslogChange.bind(this)} />
         {this.renderForm()}
       </section>
     );
