@@ -60,7 +60,7 @@ export default class WifiPanel extends Component {
       return '';
     } else {
       return <Encryption
-        selected={this.state.encryption}
+        value={this.state.encryption}
         onChange={this.changeEncryption.bind(this)}
         />
     }

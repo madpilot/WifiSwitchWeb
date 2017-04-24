@@ -17,7 +17,7 @@ const types = [
 export default class Encryption extends Component {
   render() {
     return (
-      <Select label="Security" onChange={(e) => this.props.onChange(e.target.value)} value={this.props.selected}>
+      <Select label="Security" onChange={(e) => this.props.onChange(e.target.value)} value={this.props.value}>
         {types.map((type) => {
           return <option value={type[0]}>{type[1]}</option>
         })}
