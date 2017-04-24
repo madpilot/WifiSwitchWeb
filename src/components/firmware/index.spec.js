@@ -2,8 +2,6 @@ import FirmwarePanel from './index.js';
 
 describe("<FirmwarePanel>", () => {
   describe("#render", () => {
-    let value, onChange;
-
     let renderEl = (() => {
       return renderHTML(<FirmwarePanel />);
     });
