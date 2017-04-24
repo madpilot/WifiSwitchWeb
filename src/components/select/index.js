@@ -8,10 +8,6 @@ export default class Select extends Component {
   }
 
   renderOption(option) {
-    if(option.nodeName != "option") {
-      return option;
-    }
-
     if(this.props.value == option.attributes.value) {
       option.attributes.selected = "selected";
     }
@@ -37,7 +33,7 @@ export default class Select extends Component {
         {this.renderLabel()}
 
         <span className={styles.wrapper}>
-          <select {...this.props} className={styles.select}>
+          <select {...this.props} id={this._id} className={styles.select}>
             {this.props.children.map((c) => { return this.renderOption(c) })}
           </select>
         </span>
