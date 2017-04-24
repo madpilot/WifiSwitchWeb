@@ -2,15 +2,27 @@ function defaultPredicate() {
   return true;
 }
 
-export function required({ predicate = defaultPredicate } = {}) {
+export function required() {
   return function(obj) {
-    if(predicate(obj) && (obj.value + "").trim() == "") {
+    if((obj.value + "").trim() == "") {
       obj = Object.assign({}, obj, {
         valid: false,
         error: "is required"
       });
     }
 
+    return obj;
+  }
+}
+
+export function length(len) {
+  return function(obj) {
+    if((obj.value + "").trim().length > len) {
+      obj = Object.assign({}, obj, {
+        valid: false,
+        error: "is too long (Max is + " + len + ")"
+      });
+    }
     return obj;
   }
 }

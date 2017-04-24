@@ -9,7 +9,7 @@ export default class Input extends Component {
     this.validator = new Validator(this.props.validators || []);
 
     this.state = {
-      valid: true,
+      valid: false,
       changed: this.props.value != (this.props.initial || ""),
       value: this.props.value,
       inital: this.props.initial || ""
@@ -17,16 +17,29 @@ export default class Input extends Component {
     this.validate();
   }
 
+  componentWillMount() {
+    if(this.context.validation) {
+      this.context.validation.register(this);
+    }
+  }
+
+  componentWillUnmount() {
+    if(this.context.validation) {
+      this.context.validation.unregister(this);
+    }
+  }
+
   validate() {
     this.setState(this.validator.validate(this.state));
+  }
 
-    if(this.props.onValidate) {
-      this.props.onValidate(this.state.valid);
-    }
+  valid() {
+    return this.state.valid;
   }
 
   update() {
     var context = this;
+
     return function(e) {
       context.setState({ value: e.target.value, changed: true });
       context.validate();
@@ -41,6 +54,19 @@ export default class Input extends Component {
     if(!this.state.valid) {
       return (
         <span className={styles.error}>{this.state.error}</span>
+      );
+    } else {
+      return "";
+    }
+  }
+
+  renderLabel() {
+    if(typeof(this.props.label) != "undefined") {
+      return (
+        <label for={this._id} className={styles.label}>
+          {this.props.label}
+          {this.renderError()}
+        </label>
       );
     } else {
       return "";
@@ -63,10 +89,7 @@ export default class Input extends Component {
 
     return (
       <div className={className}>
-        <label for={this._id} className={styles.label}>
-          {this.props.label}
-          {this.renderError()}
-        </label>
+        {this.renderLabel()}
         <span className={styles.wrapper}>
           <input id={this._id} {...props} className={styles.input} />
         </span>

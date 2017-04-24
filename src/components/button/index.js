@@ -3,16 +3,19 @@ import styles from './style.css';
 
 export default class Button extends Component {
   render() {
-    let props = Object.assign({}, this.props);
-
-    let className = styles.container;
+    let containerClassName = styles.container;
     if(this.props.className) {
-      className += " " + this.props.className;
+      containerClassName += " " + this.props.className;
+    }
+
+    let disabled = !!this.props.disabled;
+    if(this.context.validation) {
+      disabled = !this.context.validation.valid();
     }
 
     return (
-      <div className={className}>
-        <button className={styles.button}>{this.props.children}</button>
+      <div className={containerClassName}>
+        <button className={styles.button} disabled={disabled}>{this.props.children}</button>
       </div>
     );
   }
