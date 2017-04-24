@@ -6,25 +6,14 @@ describe("<Button>", () => {
     let disabled;
     let className;
     let context;
-    let dom;
-
+    
     beforeEach(() => {
-      dom = null;
       disabled = undefined;
       className = undefined;
       context = undefined;
     })
 
-    let renderHTML = ((component) => {
-      if(dom === null) {
-        document.body.innerHTML = '';
-        render(component, document.body);
-        dom = document.body;
-      }
-      return dom;
-    });
-
-    let renderButton = ((component) => {
+    let renderButton = (() => {
       return renderHTML(<Button className={className} disabled={disabled}>Test</Button>);
     });
 

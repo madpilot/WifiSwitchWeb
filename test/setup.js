@@ -35,3 +35,17 @@ for(var key in win) {
 
   global[key] = win[key];
 }
+
+let dom = null;
+global.renderHTML = ((component) => {
+  if(dom === null) {
+    document.body.innerHTML = '';
+    render(component, document.body);
+    dom = document.body;
+  }
+  return dom;
+});
+
+beforeEach(() => {
+  dom = null;
+});
