@@ -1,32 +1,68 @@
 import Button from './index.js'
 import { Component } from 'preact';
 
-describe("\<Button>", () => {
+describe("<Button>", () => {
   describe("#render", () => {
     let disabled;
     let className;
     let context;
+    let dom;
 
     beforeEach(() => {
+      dom = null;
       disabled = undefined;
       className = undefined;
       context = undefined;
     })
 
-    let button = (() => {
-      return <Button className={className} disabled={disabled}>Test</Button>;
+    let renderHTML = ((component) => {
+      if(dom === null) {
+        document.body.innerHTML = '';
+        render(component, document.body);
+        dom = document.body;
+      }
+      return dom;
     });
 
-    it("contains a button", () => {
-      expect(button()).to.eql(<div class="container"><button class="button">Test</button></div>);
-    })
+    let renderButton = ((component) => {
+      return renderHTML(<Button className={className} disabled={disabled}>Test</Button>);
+    });
+
+    let button = (() => {
+      return renderButton().querySelector("button");
+    });
+
+    let container = (() => {
+      return renderButton().querySelector("div");
+    });
+
+    describe("container", () => {
+      it("is rendered", () => {
+        expect(container()).to.not.eq(null);
+      });
+      
+      it("has container className", () => {
+        expect(container().className).to.eq("container");
+      });
+    });
+
+    describe("button", () => {
+      it("contains a button", () => {
+        expect(button()).to.not.eq(null);
+      })
+
+      it("outputs children", () => {
+        expect(button().textContent).to.eq("Test");
+      });
+    });
+      
 
     describe("disabled", () => {
       describe("set to false", () => {
         beforeEach(() => { disabled = false });
 
         it("doesn't render disabled", () => {
-          expect(button()).to.eql(<div class="container"><button class="button">Test</button></div>);
+          expect(button().getAttribute('disabled')).to.eq(null);
         });
       });
 
@@ -34,7 +70,7 @@ describe("\<Button>", () => {
         beforeEach(() => { disabled = true });
 
         it("renders disabled", () => {
-          expect(button()).to.eql(<div class="container"><button class="button" disabled="disabled">Test</button></div>);
+          expect(button().getAttribute('disabled')).to.not.eq(null);
         });
       });
 
@@ -55,11 +91,15 @@ describe("\<Button>", () => {
           }
         }
 
+        let mocked = (() => {
+          return renderHTML(<Mock valid={valid}><Button className={className} disabled={disabled}>Test</Button></Mock>).querySelector('button');
+        });
+
         describe("where valid() is true", () => {
           beforeEach(() => { valid = true });
 
           it("doesn't render disabled", () => {
-            expect(<Mock valid={valid}>{button()}</Mock>).to.eql(<div><div class="container"><button class="button">Test</button></div></div>);
+            expect(mocked().getAttribute('disabled')).to.eq(null);
           });
         });
 
@@ -67,7 +107,7 @@ describe("\<Button>", () => {
           beforeEach(() => { valid = false });
 
           it("renders disabled", () => {
-            expect(<Mock valid={valid}>{button()}</Mock>).to.eql(<div><div class="container"><button class="button" disabled="disabled">Test</button></div></div>);
+            expect(mocked().getAttribute('disabled')).to.not.eq(null);
           });
         });
       });
@@ -76,8 +116,12 @@ describe("\<Button>", () => {
     describe("supplied className", () => {
       beforeEach(() => { className = 'supplied' });
 
-      it("adds the classname", () => {
-        expect(button()).to.eql(<div class="container supplied"><button class="button">Test</button></div>);
+      it("has the supplied classname", () => {
+        expect(container().className.split(" ")).to.include("supplied");
+      });
+
+      it("has the original classname", () => {
+        expect(container().className.split(" ")).to.include("container");
       });
     })
   });
