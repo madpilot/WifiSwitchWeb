@@ -2,7 +2,7 @@ import { h, Component } from 'preact';
 
 import styles from './style.css';
 
-export default class FirmwarePanel extends Component {
+export default class Tab extends Component {
   render() {
     if(this.props.current == this.props.name) {
       return (

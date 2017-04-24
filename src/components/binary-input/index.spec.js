@@ -47,11 +47,29 @@ describe("<BinaryInput>", () => {
       });
     });
 
+    describe("className", () => {
+      describe("label", () => {
+        it("is set to label", () => {
+          expect(labelEl().className).to.eq("label");
+        });
+      });
+      
+      describe("input", () => {
+        it("is set to input", () => {
+          expect(inputEl().className).to.eq("input");
+        });
+      });
+    });
+
     describe("props", () => {
       beforeEach(() => { props = { title: "test" } });
 
       it("passes the props through", () => {
         expect(inputEl().getAttribute('title')).to.eq("test");
+      });
+
+      it("doesn't pass the label", () => {
+        expect(inputEl().getAttribute('label')).to.eq(null);
       });
     });
   });
