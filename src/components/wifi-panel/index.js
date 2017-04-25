@@ -22,8 +22,6 @@ export default class WifiPanel extends Component {
   updateAP(state) {
     this.setState(state);
 
-    console.log(this.state);
-
     this.props.onUpdate({
       scan: this.state.scan,
       ssid: this.state.ssid,
