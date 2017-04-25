@@ -41,8 +41,6 @@ export default class NetworkPanel extends Component {
     }
   }
 
-
-
   render() {
     return (
       <section className={styles.panel}>
