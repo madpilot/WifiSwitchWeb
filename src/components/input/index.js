@@ -8,11 +8,13 @@ export default class Input extends Component {
     this._id = "input_" + Math.random().toString(36).substring(2, 7);
     this.validator = new Validator(this.props.validators || []);
 
+    let initial = this.props.initial || "";
+
     this.state = {
       valid: false,
-      changed: this.props.value != (this.props.initial || ""),
+      changed: this.props.value != initial,
       value: this.props.value,
-      inital: this.props.initial || ""
+      initial: initial
     }
     this.validate();
   }
@@ -77,7 +79,6 @@ export default class Input extends Component {
     let props = Object.assign({}, this.props);
     delete props['label'];
     delete props['className'];
-    delete props['onInvalid'];
     delete props['validators'];
 
     props.onInput = this.update();

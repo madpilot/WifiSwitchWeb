@@ -52,7 +52,7 @@ describe("<Encryption>", () => {
           onChange = sinon.spy();
           value = "2";
           
-          var evt = document.createEvent("HTMLEvents");
+          let evt = document.createEvent("HTMLEvents");
           evt.initEvent("change", false, true);
           renderEl().querySelector("select").dispatchEvent(evt);
         });
