@@ -30,9 +30,9 @@ export default class NetworkPanel extends Component {
     if(!this.props.dhcp) {
       const fields = { ipAddress: "IP Address", dnsServer: "DNS Server", gateway: "Gateway", subnet: "Subnet" };
       return (
-        <div>
+        <div className={styles['static-panel']}>
           {Object.keys(fields).map((key) => {
-            return <Input label={fields[key]} type="text" autocomplete="off" autocapitalize="off" value={this.props[key]} onInput={this.onFieldChange(key).bind(this)} validators={textValidators} />
+            return <Input key={key} label={fields[key]} type="text" autocomplete="off" autocapitalize="off" value={this.props[key]} onInput={this.onFieldChange(key).bind(this)} validators={textValidators} />
           })}
         </div>
       );

@@ -62,6 +62,17 @@ describe("<NetworkPanel>", () => {
     });
   });
 
+  describe("onFieldChange", () => {
+    let stub;
+    beforeEach(() => { stub = sinon.stub(obj(), 'update') });
+
+    it("sets the field state", () => {
+      let f = obj().onFieldChange('ipAddress');
+      f({ target: { value: '192.168.0.1' } });
+      expect(stub).to.have.been.calledWith({ ipAddress: '192.168.0.1' });
+    });
+  });
+
   describe("onDCHPChange", () => {
     let stub;
     beforeEach(() => { stub = sinon.stub(obj(), 'update') });
@@ -101,6 +112,24 @@ describe("<NetworkPanel>", () => {
     describe("group", () => {
       it("className is group", () => {
         expect(renderEl().querySelector("section > div.group")).to.not.eq(null);
+      });
+    });
+
+    describe("Static Panel", () => {
+      describe("dhcp is false", () => {
+        beforeEach(() => { dhcp = false });
+
+        it("renders static panel", () => {
+          expect(renderEl().querySelector("div.static-panel")).to.not.eq(null)
+        });
+      });
+
+      describe("dhcp is true", () => {
+        beforeEach(() => { dhcp = true });
+
+        it("does not render static panel", () => {
+          expect(renderEl().querySelector("div.static-panel")).to.eq(null)
+        });
       });
     });
   });
