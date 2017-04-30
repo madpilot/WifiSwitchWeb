@@ -11,6 +11,8 @@ import Button from './button';
 
 import Form from '../validation/form';
 
+import { encode, decode } from '../lib/config';
+
 const TAB_SETTINGS = 0;
 const TAB_FIRMWARE = 1;
 
@@ -50,6 +52,53 @@ export default class App extends Component {
       },
       tab: TAB_SETTINGS
     };
+    setTimeout(() => {
+    this.fetchConfig();
+    }, 1000);
+  }
+
+  fetchConfig() {
+    window.fetch("/config.dat").then((response) => {
+      return response.text();
+    }).then((config) => {
+      let decoded = decode(config);
+      console.log(decoded);
+      this.setState({
+        wifi: {
+          ssid: decoded.ssid,
+          encryption: decoded.encryption,
+          passkey: decoded.passkey,
+          scan: false
+        },
+        network: {
+          deviceName: decoded.deviceName,
+          dhcp: decoded.dhcp,
+          ipAddress: decoded.staticIP,
+          dnsServer: decoded.staticDNS,
+          gateway: decoded.staticGateway,
+          subnet: decoded.staticSubnet
+        },
+        mqtt: {
+          server: decoded.mqttServerName,
+          port: decoded.mqttPort,
+          authMode: decoded.mqttAuthMode,
+          ssl: decoded.mqttTLS,
+          publishChannel: decoded.mqttPublishChannel,
+          subscribeChannel: decoded.mqttSubscribeChannel
+        },
+        syslog: {
+          syslog: decoded.syslog,
+          server: decoded.syslogHost,
+          port: decoded.syslogPort,
+          level: decoded.syslogLevel
+        }
+      });
+    });
+    console.log(this.state);
+  }
+
+  saveConfig() {
+
   }
 
   update(section) {
