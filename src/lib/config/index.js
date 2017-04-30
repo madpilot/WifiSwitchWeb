@@ -1,3 +1,30 @@
+export const DEFAULTS = {
+  encryption: '7',
+  dhcp: true,
+  syslog: false,
+  mqttAuthMode: "0",
+  mqttTLS: false,
+  mqttPort: '',
+  syslogPort: '',
+  syslogLevel: '6',
+  
+  ssid: '',
+  passkey: '',
+  deviceName: '',
+  mqttServerName: '',
+  mqttUsername: '',
+  mqttPassword: '',
+  mqttFingerprint: '',
+  mqttPublishChannel: '',
+  mqttSubscribeChannel: '',
+  syslogHost: '',
+  staticIP: '',
+  staticDNS: '',
+  staticGateway: '',
+  staticSubnet: '',
+}
+const STRINGS = Object.keys(DEFAULTS).slice(8);
+
 function deserializeString(buffer, offset) {
   let len = buffer[offset];
   let start = offset + 1;
@@ -37,20 +64,9 @@ export function encode(obj) {
   //// syslogLevel - 8 bit number
   bytes[6] = obj.syslogLevel & 0xFF;
 
-  bytes = serializeString(bytes, obj.ssid);
-  bytes = serializeString(bytes, obj.passkey);
-  bytes = serializeString(bytes, obj.deviceName);
-  bytes = serializeString(bytes, obj.mqttServerName);
-  bytes = serializeString(bytes, obj.mqttUsername);
-  bytes = serializeString(bytes, obj.mqttPassword);
-  bytes = serializeString(bytes, obj.mqttFingerprint);
-  bytes = serializeString(bytes, obj.mqttPublishChannel);
-  bytes = serializeString(bytes, obj.mqttSubscribeChannel);
-  bytes = serializeString(bytes, obj.syslogHost);
-  bytes = serializeString(bytes, obj.staticIP);
-  bytes = serializeString(bytes, obj.staticDNS);
-  bytes = serializeString(bytes, obj.staticGateway);
-  bytes = serializeString(bytes, obj.staticSubnet);
+  STRINGS.forEach((key) => {
+    bytes = serializeString(bytes, obj[key]);
+  });
 
   let hex = '';
   bytes.forEach((byte) => {
@@ -70,69 +86,22 @@ export function decode(str) {
     bytes.push(parseInt(str.substring(i * 2, (i * 2) + 2), 16));
   }
 
-  let encryption = bytes[1] & 0x07;
-  let dhcp = ((bytes[1] >> 3) & 0x01) == 1;
-  let syslog = ((bytes[1] >> 4) & 0x01) == 1;
-  let mqttAuthMode = (bytes[1] >> 5) & 0x03;
-  let mqttTLS = ((bytes[1] >> 7) & 0x01) == 1;
-  let mqttPort = (bytes[2] << 8) + bytes[3];
-  let syslogPort = (bytes[4] << 8) + bytes[5];
-  let syslogLevel = bytes[6];
+  let obj = Object.assign({}, DEFAULTS, {
+    encryption: bytes[1] & 0x07,
+    dhcp: ((bytes[1] >> 3) & 0x01) == 1,
+    syslog: ((bytes[1] >> 4) & 0x01) == 1,
+    mqttAuthMode: (bytes[1] >> 5) & 0x03,
+    mqttTLS: ((bytes[1] >> 7) & 0x01) == 1,
+    mqttPort: (bytes[2] << 8) + bytes[3],
+    syslogPort: (bytes[4] << 8) + bytes[5],
+    syslogLevel: bytes[6]
+  });
 
   let offset = 7;
-  let ssid,
-      passkey,
-      deviceName,
-      mqttServerName,
-      mqttUsername,
-      mqttPassword,
-      mqttFingerprint,
-      mqttPublishChannel,
-      mqttSubscribeChannel,
-      syslogHost,
-      staticIP,
-      staticDNS,
-      staticGateway,
-      staticSubnet;
 
-  [ offset, ssid ] = deserializeString(bytes, offset);
-  [ offset, passkey ] = deserializeString(bytes, offset);
-  [ offset, deviceName ] = deserializeString(bytes, offset);
-  [ offset, mqttServerName ] = deserializeString(bytes, offset);
-  [ offset, mqttUsername ] = deserializeString(bytes, offset);
-  [ offset, mqttPassword ] = deserializeString(bytes, offset);
-  [ offset, mqttFingerprint ] = deserializeString(bytes, offset);
-  [ offset, mqttPublishChannel ] = deserializeString(bytes, offset);
-  [ offset, mqttSubscribeChannel ] = deserializeString(bytes, offset);
-  [ offset, syslogHost ] = deserializeString(bytes, offset);
-  [ offset, staticIP ] = deserializeString(bytes, offset);
-  [ offset, staticDNS ] = deserializeString(bytes, offset);
-  [ offset, staticGateway ] = deserializeString(bytes, offset);
-  [ offset, staticSubnet ] = deserializeString(bytes, offset);
+  STRINGS.forEach((key) => {
+    [ offset, obj[key] ] = deserializeString(bytes, offset);
+  });
 
-
-  return {
-    ssid,
-    passkey,
-    deviceName,
-    encryption,
-    dhcp,
-    staticIP,
-    staticDNS,
-    staticGateway,
-    staticSubnet,
-    mqttAuthMode,
-    mqttTLS,
-    mqttServerName,
-    mqttPort,
-    mqttUsername,
-    mqttPassword,
-    mqttFingerprint,
-    mqttPublishChannel,
-    mqttSubscribeChannel,
-    syslog,
-    syslogHost,
-    syslogPort,
-    syslogLevel
-  };
+  return obj;
 }
