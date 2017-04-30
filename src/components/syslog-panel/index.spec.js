@@ -81,9 +81,69 @@ describe("<SyslogPanel>", () => {
       });
 
       describe("syslog is true", () => {
-        beforeEach(() => { syslog = true });
-        it("does not render", () => {
+        beforeEach(() => { syslog = true, syslogHost = '10.0.0.1', syslogPort = '123', syslogLevel = '4' });
+        it("renders", () => {
           expect(renderEl().querySelector("div.form")).to.not.eq(null);
+        });
+
+        describe("syslogHost", () => {
+          it("renders", () => {
+            expect(renderEl().querySelector("input[name='syslogHost']")).to.not.eq(null);
+          });
+
+          it("value is set", () => {
+            expect(renderEl().querySelector("input[name='syslogHost']").value).to.eq(syslogHost);
+          });
+
+          it("onInput triggers update", () => {
+            let evt = document.createEvent("HTMLEvents");
+            evt.initEvent("input", false, true);
+
+            let input = renderEl().querySelector("input[name='syslogHost']");
+            input.value = "172.16.1.2";
+            input.dispatchEvent(evt);
+            expect(onUpdate).to.have.been.calledWith(sinon.match({ syslogHost: "172.16.1.2" }))
+          });
+        });
+
+        describe("syslogPort", () => {
+          it("renders", () => {
+            expect(renderEl().querySelector("input[name='syslogPort']")).to.not.eq(null);
+          });
+
+          it("value is set", () => {
+            expect(renderEl().querySelector("input[name='syslogPort']").value).to.eq(syslogPort);
+          });
+
+          it("onInput triggers update", () => {
+            let evt = document.createEvent("HTMLEvents");
+            evt.initEvent("input", false, true);
+
+            let input = renderEl().querySelector("input[name='syslogPort']");
+            input.value = "514";
+            input.dispatchEvent(evt);
+            expect(onUpdate).to.have.been.calledWith(sinon.match({ syslogPort: "514" }))
+          });
+        });
+
+        describe("syslogLevel", () => {
+          it("renders", () => {
+            expect(renderEl().querySelector("select[name='syslogLevel']")).to.not.eq(null);
+          });
+
+          it("value is set", () => {
+            expect(renderEl().querySelector("select[name='syslogLevel']").value).to.eq(syslogLevel);
+          });
+
+          it("onChange triggers update", () => {
+            let evt = document.createEvent("HTMLEvents");
+            evt.initEvent("change", false, true);
+
+            let input = renderEl().querySelector("select[name='syslogLevel']");
+            input.value = "5";
+            input.dispatchEvent(evt);
+            expect(onUpdate).to.have.been.calledWith(sinon.match({ syslogLevel: "5" }))
+          });
         });
       });
     });

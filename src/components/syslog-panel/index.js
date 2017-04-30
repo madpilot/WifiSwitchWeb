@@ -3,7 +3,6 @@ import Input from '../input';
 import BinaryInput from '../binary-input';
 import Select from '../select';
 
-import { cleanProps } from '../../lib/utilities/index.js';
 import * as Validation from '../../validation/validator.js';
 
 import styles from './style.css';
@@ -11,7 +10,7 @@ const levels = ["Emergency", "Alert", "Critical", "Error", "Warning", "Notice", 
 
 export default class SyslogPanel extends Component {
   update(state) {
-    this.props.onUpdate(cleanProps(Object.assign({}, this.props, state)));
+    this.props.onUpdate(Object.assign({}, this.props, state));
   }
 
   onFieldChange(field) {
@@ -40,11 +39,12 @@ export default class SyslogPanel extends Component {
             <Input
               label="Server" 
               type="text" 
+              name="syslogHost"
               placeholder="server.local" 
               autocomplete="off" 
               autocapitalize="off" 
               value={this.props.syslogHost} 
-              onInput={this.onFieldChange('server').bind(this)} 
+              onInput={this.onFieldChange('syslogHost').bind(this)} 
               className={styles.server} 
               validators={validators}
               />
@@ -52,15 +52,16 @@ export default class SyslogPanel extends Component {
             <Input 
               label="Port" 
               type="number" 
+              name="syslogPort"
               placeholder="514" 
               min="0" 
               max="32768" 
               value={this.props.syslogPort} 
-              onInput={this.onFieldChange('port').bind(this)} 
+              onInput={this.onFieldChange('syslogPort').bind(this)} 
               className={styles.port} />
           </section>
 
-          <Select label="Level" onInput={this.onFieldChange('level').bind(this)} value={this.props.syslogLevel}>
+          <Select label="Level" name="syslogLevel" onChange={this.onFieldChange('syslogLevel').bind(this)} value={this.props.syslogLevel}>
             {Object.keys(levels).map((index) => { return <option value={index}>{levels[index]}</option> })}
           </Select>
         </div>

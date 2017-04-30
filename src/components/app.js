@@ -10,6 +10,7 @@ import SyslogPanel from './syslog-panel';
 import Button from './button';
 
 import Form from '../validation/form';
+import { cleanProps } from '../lib/utilities/index.js';
 
 import { encode, decode, DEFAULTS as CONFIG_DEFAULTS } from '../lib/config';
 
@@ -45,12 +46,10 @@ export default class App extends Component {
 
   }
 
-  update(section) {
-    return ((settings) => {
-      let state = {}
-      state[section] = settings;
-      this.setState(state);
-    });
+  update(settings) {
+    console.log('cleaned', cleanProps(settings));
+    this.setState(cleanProps(settings));
+    console.log(this.state);
   }
 
   changeTab(tab) {
@@ -76,22 +75,22 @@ export default class App extends Component {
           <Form class={styles.form}>
             <WifiPanel
               {...this.state}
-              onUpdate={this.update('wifi').bind(this)}
+              onUpdate={this.update.bind(this)}
               />
 
             <NetworkPanel
               {...this.state}
-              onUpdate={this.update('network').bind(this)}
+              onUpdate={this.update.bind(this)}
               />
 
             <MQTTPanel
               {...this.state}
-              onUpdate={this.update('mqtt').bind(this)}
+              onUpdate={this.update.bind(this)}
               />
 
             <SyslogPanel
               {...this.state}
-              onUpdate={this.update('syslog').bind(this)}
+              onUpdate={this.update.bind(this)}
               />
 
             <Button>Save</Button>

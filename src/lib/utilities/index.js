@@ -8,5 +8,5 @@ export function cleanProps(props) {
       cleaned[key] = props[key];
     }
   });
-  return props;
+  return cleaned;
 }

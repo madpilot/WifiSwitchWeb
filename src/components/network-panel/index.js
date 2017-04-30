@@ -28,7 +28,7 @@ export default class NetworkPanel extends Component {
 
   renderStaticPanel() {
     if(!this.props.dhcp) {
-      const fields = { ipAddress: "IP Address", dnsServer: "DNS Server", gateway: "Gateway", subnet: "Subnet" };
+      const fields = { staticIP: "IP Address", staticDNS: "DNS Server", staticGateway: "Gateway", staticSubnet: "Subnet" };
       return (
         <div className={styles['static-panel']}>
           {Object.keys(fields).map((key) => {
