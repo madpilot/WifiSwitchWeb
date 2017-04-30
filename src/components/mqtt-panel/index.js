@@ -42,6 +42,46 @@ export default class MQTTPanel extends Component {
     this.props.onUpdate(state);
   }
 
+  portChange(port) {
+    let portChanged = port != "";
+    this.setState({ portChanged: portChanged });
+    this.props.onUpdate({ mqttPort: portChanged ? port : this.state.portDefault });
+  }
+
+  sslChange(ssl) {
+    let portDefault = this.defaultPort(ssl);
+    this.setState({ ssl: ssl, portDefault: portDefault });
+
+    let props = { mqttTLS: ssl };
+    if(!this.state.portChanged) {
+      props.mqttPort = portDefault;
+    }
+    this.props.onUpdate(props);
+  }
+
+  authModeChange(mode) {
+    let port = this.props.mqttPort;
+    let portChanged = this.state.portChanged;
+    
+    let props = {
+      mqttAuthMode: mode
+    }
+    
+    if(mode == AUTH_MODE_CERTIFICATE) {
+      this.setState({ authMode: mode, sslDisabled: true, portDefault: this.defaultPort(true) });
+      props.mqttTLS = true;
+    } else {
+      this.setState({ authMode: mode, sslDisabled: false, portDefault: this.defaultPort(this.state.ssl) });
+      props.mqttTLS = this.state.ssl;
+    }
+    
+    if(!portChanged) {
+      props.mqttPort = this.state.defaultPort;
+    }
+    
+    this.props.onUpdate(props);
+  }
+
   onFieldChange(field) {
     return (e) => {
       let s = {}
@@ -51,44 +91,15 @@ export default class MQTTPanel extends Component {
   }
 
   onPortChange(e) {
-    let portChanged = e.target.value != "";
-    this.setState({ portChanged: portChanged });
-    this.props.onUpdate({ mqttPort: portChanged ? e.target.value : this.state.portDefault });
+    this.portChange(e.target.value);
   }
 
   onAuthModeChange(e) {
-    let mode = e.target.value;
-    let port = this.props.mqttPort;
-    
-    if(mode == AUTH_MODE_CERTIFICATE) {
-      this.setState({ authMode: mode, sslDisabled: true, portDefault: this.defaultPort(true) });
-
-      this.props.onUpdate({
-        mqttAuthMode: mode,
-        mqttTLS: true,
-        mqttPort: port || MQTT_SECURE_PORT
-      });
-    } else {
-      this.setState({ authMode: mode, sslDisabled: false, portDefault: this.defaultPort(false) });
-
-      this.props.onUpdate({
-        mqttAuthMode: mode,
-        mqttTLS: this.state.ssl,
-        mqttPort: port || MQTT_PORT
-      });
-    }
+    this.authModeChange(e.target.value);
   }
-
+ 
   onSSLChange(e) {
-    let ssl = e.target.checked;
-    let portDefault = this.defaultPort(ssl);
-    this.setState({ ssl: ssl, portDefault: portDefault });
-
-    let props = { mqttTLS: ssl };
-    if(!this.state.portChanged) {
-      props.mqttPort = portDefault;
-    }
-    this.props.onUpdate(props);
+    this.sslChange(e.target.checked);
   }
 
   renderUsernameAuth() {
