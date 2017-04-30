@@ -2,15 +2,16 @@ import NetworkPanel from './index.js';
 import { Component } from 'preact';
 
 describe("<NetworkPanel>", () => {
-  let dhcp, ipAddress, dnsServer, gateway, subnet, onUpdate;
+  let dhcp, deviceName, ipAddress, dnsServer, gateway, subnet, onUpdate;
 
   beforeEach(() =>{
     dhcp = undefined;
+    deviceName = undefined;
     ipAddress = undefined;
     dnsServer = undefined;
     gateway = undefined;
     subnet = undefined;
-    onUpdate = undefined;
+    onUpdate = sinon.stub();
   });
 
   let _obj = null;
@@ -18,6 +19,7 @@ describe("<NetworkPanel>", () => {
     if(_obj == null) {
       _obj = new NetworkPanel({
         dhcp: dhcp,
+        deviceName: deviceName,
         ipAddress: ipAddress,
         dnsServer: dnsServer,
         gateway: gateway,
@@ -34,6 +36,7 @@ describe("<NetworkPanel>", () => {
     return renderHTML(
       <NetworkPanel
         dhcp={dhcp}
+        deviceName={deviceName}
         ipAddress={ipAddress}
         dnsServer={dnsServer}
         gateway={gateway}
@@ -43,51 +46,26 @@ describe("<NetworkPanel>", () => {
     );
   });
 
-  describe("update", () => {
-    let spy;
-    let state = { state: 'state' };
-    beforeEach(() => { spy = sinon.spy(); onUpdate = spy });
-
-    it("calls onUpdate", () => {
-      obj().update(state);
-      expect(spy).to.have.been.calledWith({
-        dhcp: dhcp,
-        ipAddress: ipAddress,
-        dnsServer: dnsServer,
-        gateway: gateway,
-        subnet: subnet,
-        onUpdate: onUpdate,
-        state: 'state'
-      });
-    });
-  });
-
   describe("onFieldChange", () => {
-    let stub;
-    beforeEach(() => { stub = sinon.stub(obj(), 'update') });
-
     it("sets the field state", () => {
       let f = obj().onFieldChange('ipAddress');
       f({ target: { value: '192.168.0.1' } });
-      expect(stub).to.have.been.calledWith({ ipAddress: '192.168.0.1' });
+      expect(onUpdate).to.have.been.calledWith(sinon.match({ ipAddress: '192.168.0.1' }));
     });
   });
 
   describe("onDCHPChange", () => {
-    let stub;
-    beforeEach(() => { stub = sinon.stub(obj(), 'update') });
-
     describe("dhcp select value is 1", () => {
       it("updates dhcp to true", () => {
         obj().onDHCPChange({ target: { value: '1' } });
-        expect(stub).to.have.been.calledWith({ dhcp: true });
+        expect(onUpdate).to.have.been.calledWith(sinon.match({ dhcp: true }));
       });
     });
 
     describe("dhcp select value is 0", () => {
       it("updates dhcp to false", () => {
         obj().onDHCPChange({ target: { value: '0' } });
-        expect(stub).to.have.been.calledWith({ dhcp: false });
+        expect(onUpdate).to.have.been.calledWith(sinon.match({ dhcp: false }));
       });
     });
   });
@@ -109,6 +87,27 @@ describe("<NetworkPanel>", () => {
       });
     });
 
+    describe("deviceName", () => {
+      beforeEach(() => { deviceName = 'wifiswitch' });
+      it("renders", () => {
+        expect(renderEl().querySelector("input[name='deviceName']")).to.not.eq(null);
+      });
+
+      it("value is set", () => {
+        expect(renderEl().querySelector("input[name='deviceName']").value).to.eq(deviceName);
+      });
+
+      it("onInput triggers update", () => {
+        let evt = document.createEvent("HTMLEvents");
+        evt.initEvent("input", false, true);
+
+        let input = renderEl().querySelector("input[name='deviceName']");
+        input.value = "garage";
+        input.dispatchEvent(evt);
+        expect(onUpdate).to.have.been.calledWith(sinon.match({ deviceName: "garage" }))
+      });
+    });
+
     describe("group", () => {
       it("className is group", () => {
         expect(renderEl().querySelector("section > div.group")).to.not.eq(null);
@@ -121,6 +120,23 @@ describe("<NetworkPanel>", () => {
 
         it("renders static panel", () => {
           expect(renderEl().querySelector("div.static-panel")).to.not.eq(null)
+        });
+        
+        [ 'staticIP', 'staticDNS', 'staticGateway', 'staticSubnet' ].forEach((key) => {
+          describe(key, () => {
+            it("onInput triggers update", () => {
+              let evt = document.createEvent("HTMLEvents");
+              evt.initEvent("input", false, true);
+
+              let input = renderEl().querySelector("input[name='" + key + "']");
+              input.value = "new value";
+              input.dispatchEvent(evt);
+
+              let m = {};
+              m[key] = "new value";
+              expect(onUpdate).to.have.been.calledWith(sinon.match(m))
+            });
+          });
         });
       });
 
