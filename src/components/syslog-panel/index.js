@@ -6,7 +6,9 @@ import Select from '../select';
 import * as Validation from '../../validation/validator.js';
 
 import styles from './style.css';
-const levels = ["Emergency", "Alert", "Critical", "Error", "Warning", "Notice", "Information", "Debug"]
+
+const LEVELS = ["Emergency", "Alert", "Critical", "Error", "Warning", "Notice", "Information", "Debug"]
+const TEXT_VALIDATORS = [ Validation.required(), Validation.length(255) ];
 
 export default class SyslogPanel extends Component {
   update(state) {
@@ -31,7 +33,6 @@ export default class SyslogPanel extends Component {
 
   renderForm() {
     if(this.props.syslog) {
-      var validators = [ Validation.required() ];
 
       return (
         <div class={styles.form}>
@@ -46,7 +47,7 @@ export default class SyslogPanel extends Component {
               value={this.props.syslogHost} 
               onInput={this.onFieldChange('syslogHost').bind(this)} 
               className={styles.server} 
-              validators={validators}
+              validators={TEXT_VALIDATORS}
               />
 
             <Input 
@@ -62,7 +63,7 @@ export default class SyslogPanel extends Component {
           </section>
 
           <Select label="Level" name="syslogLevel" onChange={this.onFieldChange('syslogLevel').bind(this)} value={this.props.syslogLevel}>
-            {Object.keys(levels).map((index) => { return <option value={index}>{levels[index]}</option> })}
+            {Object.keys(LEVELS).map((index) => { return <option value={index}>{LEVELS[index]}</option> })}
           </Select>
         </div>
       );
