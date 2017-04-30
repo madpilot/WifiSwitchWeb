@@ -1,11 +1,12 @@
 import { h, Component } from 'preact';
 import Input from '../input';
 import BinaryInput from '../binary-input';
-import styles from './style.css';
 import * as Validation from '../../validation/validator.js';
 
 const FIELDS = { staticIP: "IP Address", staticDNS: "DNS Server", staticGateway: "Gateway", staticSubnet: "Subnet" };
 const TEXT_VALIDATORS = [ Validation.required(), Validation.length(255) ];
+
+import styles from './style.css';
 
 export default class NetworkPanel extends Component {
   onFieldChange(field) {
