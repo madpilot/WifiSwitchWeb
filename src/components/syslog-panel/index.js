@@ -3,13 +3,15 @@ import Input from '../input';
 import BinaryInput from '../binary-input';
 import Select from '../select';
 
+import { cleanProps } from '../../lib/utilities/index.js';
 import * as Validation from '../../validation/validator.js';
 
 import styles from './style.css';
+const levels = ["Emergency", "Alert", "Critical", "Error", "Warning", "Notice", "Information", "Debug"]
 
 export default class SyslogPanel extends Component {
   update(state) {
-    this.props.onUpdate(Object.assign({}, this.props, state));
+    this.props.onUpdate(cleanProps(Object.assign({}, this.props, state)));
   }
 
   onFieldChange(field) {
@@ -29,13 +31,11 @@ export default class SyslogPanel extends Component {
   }
 
   renderForm() {
-    const levels = ["Emergency", "Alert", "Critical", "Error", "Warning", "Notice", "Information", "Debug"]
-
     if(this.props.syslog) {
       var validators = [ Validation.required() ];
 
       return (
-        <div>
+        <div class={styles.form}>
           <section class={styles['server-port']}>
             <Input
               label="Server" 
@@ -43,7 +43,7 @@ export default class SyslogPanel extends Component {
               placeholder="server.local" 
               autocomplete="off" 
               autocapitalize="off" 
-              value={this.props.server} 
+              value={this.props.syslogHost} 
               onInput={this.onFieldChange('server').bind(this)} 
               className={styles.server} 
               validators={validators}
@@ -55,12 +55,12 @@ export default class SyslogPanel extends Component {
               placeholder="514" 
               min="0" 
               max="32768" 
-              value={this.props.port} 
+              value={this.props.syslogPort} 
               onInput={this.onFieldChange('port').bind(this)} 
               className={styles.port} />
           </section>
 
-          <Select label="Level" onInput={this.onFieldChange('level').bind(this)} value={this.props.level}>
+          <Select label="Level" onInput={this.onFieldChange('level').bind(this)} value={this.props.syslogLevel}>
             {Object.keys(levels).map((index) => { return <option value={index}>{levels[index]}</option> })}
           </Select>
         </div>
@@ -77,7 +77,7 @@ export default class SyslogPanel extends Component {
         <BinaryInput 
           label="Send logs to a remote syslog server" 
           type="checkbox" 
-          checked={this.props.syslog ? "checked" : null} 
+          checked={this.props.syslog} 
           onChange={this.onSyslogChange.bind(this)} />
         {this.renderForm()}
       </section>

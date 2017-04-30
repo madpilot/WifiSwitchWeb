@@ -1,3 +1,4 @@
+// Order is very important here
 export const DEFAULTS = {
   encryption: '7',
   dhcp: true,
@@ -64,6 +65,7 @@ export function encode(obj) {
   //// syslogLevel - 8 bit number
   bytes[6] = obj.syslogLevel & 0xFF;
 
+  // Generator that serializes all the strings
   STRINGS.forEach((key) => {
     bytes = serializeString(bytes, obj[key]);
   });
@@ -99,6 +101,7 @@ export function decode(str) {
 
   let offset = 7;
 
+  // Generator that deserializes all the strings
   STRINGS.forEach((key) => {
     [ offset, obj[key] ] = deserializeString(bytes, offset);
   });

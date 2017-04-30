@@ -75,22 +75,22 @@ export default class App extends Component {
         <Tab name={TAB_SETTINGS} current={this.state.tab}>
           <Form class={styles.form}>
             <WifiPanel
-              {...this.state.wifi}
+              {...this.state}
               onUpdate={this.update('wifi').bind(this)}
               />
 
             <NetworkPanel
-              {...this.state.network}
+              {...this.state}
               onUpdate={this.update('network').bind(this)}
               />
 
             <MQTTPanel
-              {...this.state.mqtt}
+              {...this.state}
               onUpdate={this.update('mqtt').bind(this)}
               />
 
             <SyslogPanel
-              {...this.state.syslog}
+              {...this.state}
               onUpdate={this.update('syslog').bind(this)}
               />
 
