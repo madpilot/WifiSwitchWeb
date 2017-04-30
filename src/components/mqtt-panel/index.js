@@ -28,7 +28,9 @@ export default class MQTTPanel extends Component {
       portDefault: this.defaultPort(ssl)
     })
 
-    this.props.onUpdate({ mqttPort: this.state.portChanged ? this.props.mqttPort : this.state.portDefault });
+    if(!this.state.portChanged) {
+      this.props.onUpdate({ mqttPort: this.state.portDefault });
+    }
   }
 
   defaultPort(ssl) {
@@ -80,7 +82,12 @@ export default class MQTTPanel extends Component {
     let ssl = e.target.checked;
     let portDefault = this.defaultPort(ssl);
     this.setState({ ssl: ssl, portDefault: portDefault });
-    this.props.onUpdate({ mqttTLS: ssl, mqttPort: this.state.portChanged ? this.props.port : portDefault });
+
+    let props = { mqttTLS: ssl };
+    if(!this.state.portChanged) {
+      props.mqttPort = portDefault;
+    }
+    this.props.onUpdate(props);
   }
 
   renderUsernameAuth() {

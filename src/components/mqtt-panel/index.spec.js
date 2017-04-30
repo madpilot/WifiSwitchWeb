@@ -112,7 +112,7 @@ describe("<MQTTPanel>", () => {
             input.checked = checked;
             input.dispatchEvent(evt);
           });
-          
+ 
           describe("empty port", () => {
             beforeEach(() => { mqttPort = "" });
 
@@ -143,7 +143,6 @@ describe("<MQTTPanel>", () => {
                   }, 0);
                 });
               });
-
             });
 
             describe("becomes unchecked", () => {
@@ -166,6 +165,68 @@ describe("<MQTTPanel>", () => {
                 });
 
                 it("shows the placeholder", (done) => {
+                  trigger();
+                  setTimeout(function() {
+                    expect(renderEl().querySelector("input[name='mqttPort']").getAttribute("placeholder")).to.eq("1883");
+                    done();
+                  }, 0);
+                });
+              });
+            });
+          });
+
+          describe("non-empty port", () => {
+            beforeEach(() => { mqttPort = "1234" });
+
+            describe("becomes checked", () => {
+              beforeEach(() => { mqttTLS = false; checked = true });
+
+              it("set mqttTLS to true", () => {
+                trigger();
+                expect(onUpdate).to.have.been.calledWith(sinon.match({ mqttTLS: true }))
+              });
+              
+              describe("port", () => {
+                it("is not set", () => {
+                  trigger();
+                  expect(onUpdate).to.have.not.been.calledWith(sinon.match({ mqttPort: "1234" }))
+                });
+
+                it("is not empty", () => {
+                  trigger();
+                  expect(renderEl().querySelector("input[name='mqttPort']").value).to.eq("1234");
+                });
+
+                it("does not change the placeholder", (done) => {
+                  trigger();
+                  setTimeout(function() {
+                    expect(renderEl().querySelector("input[name='mqttPort']").getAttribute("placeholder")).to.eq("8883");
+                    done();
+                  }, 0);
+                });
+              });
+            });
+
+            describe("becomes unchecked", () => {
+              beforeEach(() => { mqttTLS = true; checked = false });
+
+              it("set mqttTLS to true", () => {
+                trigger();
+                expect(onUpdate).to.have.been.calledWith(sinon.match({ mqttTLS: false }))
+              });
+              
+              describe("port", () => {
+                it("is not set", () => {
+                  trigger();
+                  expect(onUpdate).to.have.not.been.calledWith(sinon.match({ mqttPort: "1234" }))
+                });
+
+                it("is not empty", () => {
+                  trigger();
+                  expect(renderEl().querySelector("input[name='mqttPort']").value).to.eq("1234");
+                });
+
+                it("does not change the placeholder", (done) => {
                   trigger();
                   setTimeout(function() {
                     expect(renderEl().querySelector("input[name='mqttPort']").getAttribute("placeholder")).to.eq("1883");
