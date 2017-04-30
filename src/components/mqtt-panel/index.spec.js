@@ -64,10 +64,57 @@ describe("<MQTTPanel>", () => {
               expect(renderEl().querySelector("input[name='mqttPort']").getAttribute('placeholder')).to.eq('1883');
             });
           });
+
+          describe("TLS changed", () => {
+            beforeEach(() => { mqttTLS = false });
+
+            let trigger = (() => {
+              let evt = document.createEvent("HTMLEvents");
+              evt.initEvent("change", false, true);
+
+              let input = renderEl().querySelector("input[name='mqttTLS']");
+              input.checked = true;
+              input.dispatchEvent(evt);
+            });
+ 
+            it("changes value", () => {
+              trigger();
+              expect(onUpdate).to.have.been.calledWith(sinon.match({ mqttPort: "8883" }))
+            });
+
+            it("displays and emtpy value", (done) => {
+              trigger();
+              
+              setTimeout(function() {
+                expect(renderEl().querySelector("input[name='mqttPort']").value).to.eq("");
+                done();
+              }, 0);
+            });
+          });
+
         });
 
         describe("Set", () => {
           beforeEach(() => { mqttPort = "1883" });
+
+          let changePort = ((value) => {
+            let evt = document.createEvent("HTMLEvents");
+            evt.initEvent("input", false, true);
+
+            let input = renderEl().querySelector("input[name='mqttPort']");
+            input.value = value;
+            input.dispatchEvent(evt);
+          });
+           
+          let changeTLS = ((checked) => {
+            let evt = document.createEvent("HTMLEvents");
+            evt.initEvent("change", false, true);
+
+            let input = renderEl().querySelector("input[name='mqttTLS']");
+            input.checked = checked;
+            input.dispatchEvent(evt);
+          });
+        
           it("renders", () => {
             expect(renderEl().querySelector("input[name='mqttPort']")).to.not.eq(null);
           });
@@ -77,13 +124,61 @@ describe("<MQTTPanel>", () => {
           });
 
           it("onInput triggers update", () => {
-            let evt = document.createEvent("HTMLEvents");
-            evt.initEvent("input", false, true);
-
-            let input = renderEl().querySelector("input[name='mqttPort']");
-            input.value = "8883";
-            input.dispatchEvent(evt);
+            changePort("8883");
             expect(onUpdate).to.have.been.calledWith(sinon.match({ mqttPort: "8883" }))
+          });
+
+          describe("TLS changed", () => {
+            beforeEach(() => { mqttTLS = false, mqttPort = "1234" });
+
+
+            it("does not change value", () => {
+              expect(onUpdate).to.have.not.been.calledWith(sinon.match({ mqttPort: "8883" }))
+            });
+
+            it("does not update value", () => {
+              changeTLS(true);
+              expect(onUpdate).to.have.not.been.calledWith(sinon.match({ mqttPort: "1234" }))
+            });
+
+            it("displays the same value", (done) => {
+              changeTLS(true);
+              
+              setTimeout(function() {
+                expect(renderEl().querySelector("input[name='mqttPort']").value).to.eq("1234");
+                done();
+              }, 0);
+            });
+          });
+
+          describe("becomes empty", () => {
+            describe("TLS false", () => {
+              beforeEach(() => { mqttTLS = false });
+
+              it("sets the port to 1883", () => {
+                changePort("");
+                expect(onUpdate).to.have.been.calledWith(sinon.match({ mqttPort: "1883" }))
+              });
+
+              it("sets the port input value to empty", () => {
+                changePort("");
+                expect(renderEl().querySelector("input[name='mqttPort']").value).to.eq("");
+              });
+            });
+
+            describe("TLS true", () => {
+              beforeEach(() => { mqttTLS = true });
+
+              it("sets the port to 8883", () => {
+                changePort("");
+                expect(onUpdate).to.have.been.calledWith(sinon.match({ mqttPort: "8883" }))
+              });
+
+              it("sets the port input value to empty", () => {
+                changePort("");
+                expect(renderEl().querySelector("input[name='mqttPort']").value).to.eq("");
+              });
+            });
           });
         });
       });
@@ -238,7 +333,7 @@ describe("<MQTTPanel>", () => {
           });
         });
       });
-      
+
       describe("mqttPublishChannel", () => {
         beforeEach(() => { mqttPublishChannel = "mqtt/publish" });
         

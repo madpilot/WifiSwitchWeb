@@ -51,8 +51,9 @@ export default class MQTTPanel extends Component {
   }
 
   onPortChange(e) {
-    this.setState({ portChanged: true });
-    this.props.onUpdate({ mqttPort: e.target.value });
+    let portChanged = e.target.value != "";
+    this.setState({ portChanged: portChanged });
+    this.props.onUpdate({ mqttPort: portChanged ? e.target.value : this.state.portDefault });
   }
 
   onAuthModeChange(e) {
