@@ -1,8 +1,8 @@
 import { h, Component } from 'preact';
 import Validator, * as Validation from '../../validation/validator.js';
 
-const SCANNING = 0;
-const SCANNING_COMPLETE = 1;
+export const SCANNING = 0;
+export const SCANNING_COMPLETE = 1;
 
 import styles from './style.css';
 const textValidators = [ Validation.required(), Validation.length(255) ];
@@ -15,7 +15,7 @@ export default class SSID extends Component {
     this.validator = new Validator(textValidators);
 
     this.state = {
-      connection: SCANNING_COMPLETE,
+      connection: SCANNING,
       scanned: {
         ssid: this.props.ssid,
         encryption: this.props.encryption
@@ -34,13 +34,34 @@ export default class SSID extends Component {
           }
         }
       },
-      aps: [{"ssid":"OPTUSVD3C49EE8","rssi":-90,"encryption":"8"},{"ssid":"Dean&Carol.b","rssi":-92,"encryption":"7"},{"ssid":"NETGEAR19","rssi":-76,"encryption":"4"},{"ssid":"Burntos","rssi":-60,"encryption":"4"},{"ssid":"OPTUS_B8EC72","rssi":-89,"encryption":"8"},{"ssid":"OPTUS_A49184","rssi":-85,"encryption":"8"}]
+      aps: []
     };
+  }
+
+  scan() {
+    this.setState({ connection: SCANNING, aps: [] });
+
+    window.fetch("/aps.json").then((response) => {
+      return response.json();
+    }).then((aps) => {
+      this.setState({
+        aps: aps,
+        connection: SCANNING_COMPLETE
+      });
+
+      this.changeAp(aps[0].ssid);
+    });
   }
 
   componentWillMount() {
     if(this.context.validation) {
       this.context.validation.register(this);
+    }
+  }
+
+  componentDidMount() {
+    if(this.state.connection == SCANNING) {
+      this.scan();
     }
   }
 
@@ -63,7 +84,7 @@ export default class SSID extends Component {
 
   valid() {
     if(this.props.scan) {
-      return true;
+      return this.state.connection == SCANNING_COMPLETE;
     } else {
       return this.state.validate.manual.ssid.valid;
     }
@@ -93,13 +114,17 @@ export default class SSID extends Component {
     this.props.onChange(this.state.manual);
   }
 
-  changeAp = e => {
-    let ap = this.state.aps.filter((ap) => ap.ssid == e.target.value);
+  changeAp(ssid) {
+    let ap = this.state.aps.filter((ap) => ap.ssid == ssid);
 
     if(ap.length > 0) {
       this.setScannedState({ ssid: ap[0].ssid, encryption: ap[0].encryption })
     }
   };
+
+  onChangeAp(e) {
+    this.changeAp(e.target.value);
+  }
 
   changeManualSSID(e) {
     this.setManualState({ ssid: e.target.value });
@@ -119,21 +144,30 @@ export default class SSID extends Component {
 
   renderScanning() {
     return (
-      <select id={this._id} disabled>
-        <option>Scanning...</option>
+      <select id={this._id} disabled className={styles.select}>
+        <option>Scanning&hellip;</option>
       </select>
     );
   }
 
   renderAps() {
+    let aps = this.state.aps;
+
     return (
-      <select id={this._id} onChange={this.changeAp.bind(this)} className={styles.select}>
-        {this.state.aps.map((ap) => {
-          return (
-            <option value={ap.ssid} key={ap.ssid} selected={this.state.scanned.ssid == ap.ssid ? "selected" : null}>{ap.ssid}</option>
-          );
-        })}
-      </select>
+      <div className={styles.wrapper}>
+        <select id={this._id} onChange={this.onChangeAp.bind(this)} className={styles['select-ap']} disabled={aps.length == 0}>
+          {aps.length > 0 ?
+            this.state.aps.map((ap) => {
+              return (
+                <option value={ap.ssid} key={ap.ssid} selected={this.state.scanned.ssid == ap.ssid ? "selected" : null}>{ap.ssid}</option>
+              );
+            })
+          :
+            <option value="">No Access Points Found</option>
+          }
+        </select>
+        <a href="#" className={styles.rescan} onClick={(e) => { e.preventDefault(); this.scan() }}>&#8635;</a>
+      </div>
     );
   }
 
@@ -163,7 +197,7 @@ export default class SSID extends Component {
   renderSelect() {
     if(this.state.connection == SCANNING) {
       return this.renderScanning();
-    } else if(this.state.connection == SCANNING_COMPLETE && this.state.aps.length > 0) {
+    } else if(this.state.connection == SCANNING_COMPLETE) {
       return this.renderAps();
     } else {
       return '';

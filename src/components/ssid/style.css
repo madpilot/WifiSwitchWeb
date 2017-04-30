@@ -5,7 +5,7 @@
   float: right;
   color: primary;
   text-decoration: none;
-  composes: animation from '../../modules/animation.css';
+  composes: link from '../../modules/animation.css';
 }
 
 .tab:hover {
@@ -29,6 +29,11 @@
 	composes: input from '../../modules/input.css';
 }
 
+.select-ap {
+  composes: select;
+  width: calc(100% - 1rem);
+}
+
 .error {
   color: error;
   font-size: smaller;
@@ -36,4 +41,17 @@
 
 .error:before {
   content: " ";
+}
+
+.rescan {
+  text-decoration: none;
+  color: primary;
+  text-align: right;
+  display: inline-block;
+  width: 1rem;
+  composes: link from '../../modules/animation.css';
+}
+
+.rescan:hover {
+  color: primary-highlight;
 }

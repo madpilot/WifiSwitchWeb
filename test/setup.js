@@ -2,6 +2,7 @@ import 'regenerator-runtime/runtime';
 import chai from 'chai';
 import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
+//import sinonAsPromised from 'sinon-as-promised';
 import assertJsx, { options } from 'preact-jsx-chai';
 import { h, render } from 'preact';
 import jsdom from 'jsdom';
@@ -21,6 +22,7 @@ global.sinon = sinon;
 global.h = h;
 global.render = render;
 global.sleep = ms => new Promise( resolve => setTimeout(resolve, ms) );
+global.fetch = (() => new Promise( resolve => function() {} ));
 
 // Setup JSDOM
 var doc = jsdom.jsdom("<!doctype html><html><body></body></html>");
