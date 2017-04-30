@@ -49,7 +49,11 @@ export default class SSID extends Component {
         connection: SCANNING_COMPLETE
       });
 
-      this.changeAp(aps[0].ssid);
+      if(aps.indexOf(this.state.ssid) > -1) {
+        this.changeAp(this.state.ssid);
+      } else {
+        this.changeAp(aps[0].ssid);
+      }
     });
   }
 

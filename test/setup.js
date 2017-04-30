@@ -22,7 +22,7 @@ global.sinon = sinon;
 global.h = h;
 global.render = render;
 global.sleep = ms => new Promise( resolve => setTimeout(resolve, ms) );
-global.fetch = (() => new Promise( resolve => function() {} ));
+global.fetch = (() => { return new Promise((resolve, reject) => {}); });
 
 // Setup JSDOM
 var doc = jsdom.jsdom("<!doctype html><html><body></body></html>");
