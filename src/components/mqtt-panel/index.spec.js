@@ -91,7 +91,6 @@ describe("<MQTTPanel>", () => {
               }, 0);
             });
           });
-
         });
 
         describe("Set", () => {
@@ -376,7 +375,114 @@ describe("<MQTTPanel>", () => {
           expect(onUpdate).to.have.been.calledWith(sinon.match({ mqttSubscribeChannel: "mqtt/subscribeChannel" }))
         });
       });
+    });
 
+    describe("mqttAuthMode", () => {
+      let setAuthMode = ((mode) => {
+        let evt = document.createEvent("HTMLEvents");
+        evt.initEvent("change", false, true);
+
+        let inputs = renderEl().querySelectorAll("input[name='mqttAuthMode']");
+        let input = [].slice.call(inputs).filter((el) => el.value == mode)[0];
+        input.dispatchEvent(evt);
+      });
+      
+      describe("AUTH_MODE_NONE", () => {
+        beforeEach(() => { mqttAuthMode = AUTH_MODE_NONE; });
+
+        it("should not render Username", () => {
+          expect(renderEl().querySelector("input[name='mqttUsername']")).to.eq(null);
+        });
+        
+        it("should not render Password", () => {
+          expect(renderEl().querySelector("input[name='mqttPassword']")).to.eq(null);
+        });
+
+        it("should not render the certificate uploader", () => {
+          expect(renderEl().querySelector("input[name='mqttCertificateFile']")).to.eq(null);
+        });
+
+        it("should not render the key uploader", () => {
+          expect(renderEl().querySelector("input[name='mqttKeyFile']")).to.eq(null);
+        });
+
+        describe("onChange", () => {
+          it("sets auth mode to AUTH_MODE_NONE", () => {
+            setAuthMode(AUTH_MODE_NONE);
+            expect(onUpdate).to.have.been.calledWith(sinon.match({ mqttAuthMode: AUTH_MODE_NONE }))
+          });
+
+          describe("mqttPort set", () => {
+            beforeEach(() => { mqttPort = '1234' });
+            
+            it("does not send the port in the update", () => {
+              setAuthMode(AUTH_MODE_NONE);
+              expect(onUpdate).to.have.not.been.calledWith(sinon.match({ mqttPort: '1234' }))
+            });
+          });
+
+          describe("mqttPort not set", () => {
+            describe("mqttTLS true", () => {
+              beforeEach(() => { mqttTLS = true });
+
+              it("sends 8883 in the update", () => {
+                setAuthMode(AUTH_MODE_NONE);
+                expect(onUpdate).to.have.been.calledWith(sinon.match({ mqttPort: '8883' }))
+              });
+            });
+
+            describe("mqttTLS false", () => {
+              beforeEach(() => { mqttTLS = false });
+
+              it("sends 1883 in the update", () => {
+                setAuthMode(AUTH_MODE_NONE);
+                expect(onUpdate).to.have.been.calledWith(sinon.match({ mqttPort: '1883' }))
+              });
+            });
+          });
+        });
+      });
+
+      describe("AUTH_MODE_USERNAME", () => {
+        beforeEach(() => { mqttAuthMode = AUTH_MODE_USERNAME; });
+        
+        it("should render Username", () => {
+          expect(renderEl().querySelector("input[name='mqttUsername']")).to.not.eq(null);
+        });
+        
+        it("should render Password", () => {
+          expect(renderEl().querySelector("input[name='mqttPassword']")).to.not.eq(null);
+        });
+
+        it("should not render the certificate uploader", () => {
+          expect(renderEl().querySelector("input[name='mqttCertificateFile']")).to.eq(null);
+
+        });
+
+        it("should not render the key uploader", () => {
+          expect(renderEl().querySelector("input[name='mqttKeyFile']")).to.eq(null);
+        });
+      });
+
+      describe("AUTH_MODE_CERTIFICATE", () => {
+        beforeEach(() => { mqttAuthMode = AUTH_MODE_CERTIFICATE; });
+        
+        it("should not render Username", () => {
+          expect(renderEl().querySelector("input[name='mqttUsername']")).to.eq(null);
+        });
+        
+        it("should not render Password", () => {
+          expect(renderEl().querySelector("input[name='mqttPassword']")).to.eq(null);
+        });
+
+        it("should render the certificate uploader", () => {
+          expect(renderEl().querySelector("input[name='mqttCertificateFile']")).to.not.eq(null);
+        });
+
+        it("should render the key uploader", () => {
+          expect(renderEl().querySelector("input[name='mqttKeyFile']")).to.not.eq(null);
+        });
+      });
     });
   });
 });
