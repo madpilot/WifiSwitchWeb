@@ -24,6 +24,7 @@ export default class App extends Component {
     super();
     
     this.state = Object.assign({}, CONFIG_DEFAULTS, {
+      scan: true,
       tab: TAB_SETTINGS
     });
     
