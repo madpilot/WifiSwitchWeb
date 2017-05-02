@@ -411,6 +411,11 @@ describe("<MQTTPanel>", () => {
             setAuthMode(AUTH_MODE_NONE);
             expect(onUpdate).to.have.been.calledWith(sinon.match({ mqttAuthMode: AUTH_MODE_NONE }))
           });
+          
+          it("enables the mqttTLS checkbox", () => {
+            setAuthMode(AUTH_MODE_NONE);
+            expect(renderEl().querySelector("input[name='mqttTLS']").disabled).to.eq(false);
+          });
 
           describe("mqttPort set", () => {
             beforeEach(() => { mqttPort = '1234' });
@@ -423,7 +428,7 @@ describe("<MQTTPanel>", () => {
 
           describe("mqttPort not set", () => {
             describe("mqttTLS true", () => {
-              beforeEach(() => { mqttTLS = true });
+              beforeEach(() => { mqttTLS = true, mqttPort = "" });
 
               it("sends 8883 in the update", () => {
                 setAuthMode(AUTH_MODE_NONE);
@@ -432,7 +437,7 @@ describe("<MQTTPanel>", () => {
             });
 
             describe("mqttTLS false", () => {
-              beforeEach(() => { mqttTLS = false });
+              beforeEach(() => { mqttTLS = false, mqttPort = "" });
 
               it("sends 1883 in the update", () => {
                 setAuthMode(AUTH_MODE_NONE);
@@ -462,6 +467,47 @@ describe("<MQTTPanel>", () => {
         it("should not render the key uploader", () => {
           expect(renderEl().querySelector("input[name='mqttKeyFile']")).to.eq(null);
         });
+
+        describe("onChange", () => {
+          it("sets auth mode to AUTH_MODE_USERNAME", () => {
+            setAuthMode(AUTH_MODE_USERNAME);
+            expect(onUpdate).to.have.been.calledWith(sinon.match({ mqttAuthMode: AUTH_MODE_USERNAME }))
+          });
+
+          it("enables the mqttTLS checkbox", () => {
+            setAuthMode(AUTH_MODE_USERNAME);
+            expect(renderEl().querySelector("input[name='mqttTLS']").disabled).to.eq(false);
+          });
+
+          describe("mqttPort set", () => {
+            beforeEach(() => { mqttPort = '1234' });
+            
+            it("does not send the port in the update", () => {
+              setAuthMode(AUTH_MODE_USERNAME);
+              expect(onUpdate).to.have.not.been.calledWith(sinon.match({ mqttPort: '1234' }))
+            });
+          });
+              
+          describe("mqttPort not set", () => {
+            describe("mqttTLS true", () => {
+              beforeEach(() => { mqttTLS = true, mqttPort = "" });
+
+              it("sends 8883 in the update", () => {
+                setAuthMode(AUTH_MODE_USERNAME);
+                expect(onUpdate).to.have.been.calledWith(sinon.match({ mqttPort: '8883' }))
+              });
+            });
+
+            describe("mqttTLS false", () => {
+              beforeEach(() => { mqttTLS = false, mqttPort = "" });
+
+              it("sends 1883 in the update", () => {
+                setAuthMode(AUTH_MODE_USERNAME);
+                expect(onUpdate).to.have.been.calledWith(sinon.match({ mqttPort: '1883' }))
+              });
+            });
+          });
+        });
       });
 
       describe("AUTH_MODE_CERTIFICATE", () => {
@@ -481,6 +527,52 @@ describe("<MQTTPanel>", () => {
 
         it("should render the key uploader", () => {
           expect(renderEl().querySelector("input[name='mqttKeyFile']")).to.not.eq(null);
+        });
+
+        describe("onChange", () => {
+          it("sets auth mode to AUTH_MODE_CERTIFICATE", () => {
+            setAuthMode(AUTH_MODE_CERTIFICATE);
+            expect(onUpdate).to.have.been.calledWith(sinon.match({ mqttAuthMode: AUTH_MODE_CERTIFICATE }))
+          });
+
+          describe("mqttPort set", () => {
+            beforeEach(() => { mqttPort = '1234' });
+            
+            it("does not send the port in the update", () => {
+              setAuthMode(AUTH_MODE_CERTIFICATE);
+              expect(onUpdate).to.have.not.been.calledWith(sinon.match({ mqttPort: '1234' }))
+            });
+          });
+
+          describe("mqttPort not set", () => {
+            describe("mqttTLS true", () => {
+              beforeEach(() => { mqttTLS = true, mqttPort = "" });
+
+              it("sends 8883 in the update", () => {
+                setAuthMode(AUTH_MODE_CERTIFICATE);
+                expect(onUpdate).to.have.been.calledWith(sinon.match({ mqttPort: '8883' }))
+              });
+            });
+
+            describe("mqttTLS false", () => {
+              beforeEach(() => { mqttTLS = false, mqttPort = "" });
+
+              it("sends 8883 in the update", () => {
+                setAuthMode(AUTH_MODE_CERTIFICATE);
+                expect(onUpdate).to.have.been.calledWith(sinon.match({ mqttPort: '8883' }))
+              });
+
+              it("send mqttTLS as true", () => {
+                setAuthMode(AUTH_MODE_CERTIFICATE);
+                expect(onUpdate).to.have.been.calledWith(sinon.match({ mqttTLS: true }))
+              });
+
+              it("disables the mqttTLS checkbox", () => {
+                setAuthMode(AUTH_MODE_CERTIFICATE);
+                expect(renderEl().querySelector("input[name='mqttTLS']").disabled).to.eq(true);
+              });
+            });
+          });
         });
       });
     });
