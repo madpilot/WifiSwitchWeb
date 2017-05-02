@@ -146,9 +146,6 @@ export default class MQTTPanel extends Component {
     }
   }
 
-  renderSSLCheckbox() {
-  }
-
   render() {
     const authModes = [
       [ AUTH_MODE_NONE, "None" ],
