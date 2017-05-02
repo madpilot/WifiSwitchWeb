@@ -18,19 +18,27 @@ export default class MQTTPanel extends Component {
   constructor(props) {
     super(props);
 
-    let certAuthMode = this.props.mqttAuthMode == AUTH_MODE_CERTIFICATE;
-    let ssl = certAuthMode ? true : this.props.mqttTLS;
-
-    this.state = Object.assign({}, props, {
-      ssl: ssl,
-      sslDisabled: certAuthMode,
-      portChanged: this.props.mqttPort != "",
-      portDefault: this.defaultPort(ssl)
-    })
-
+    this.state = this.getInitialState(props);
+    this.state.portChanged = props.mqttPort != "";
+    
     if(!this.state.portChanged) {
       this.props.onUpdate({ mqttPort: this.state.portDefault });
     }
+  }
+
+  componentWillReceiveProps(props) {
+    this.setState(this.getInitialState(props));
+  }
+
+  getInitialState(props) {
+    let certAuthMode = props.mqttAuthMode == AUTH_MODE_CERTIFICATE;
+    let ssl = certAuthMode ? true : props.mqttTLS;
+    
+    return Object.assign({}, props, {
+      ssl: ssl,
+      sslDisabled: certAuthMode,
+      portDefault: this.defaultPort(ssl)
+    });
   }
 
   defaultPort(ssl) {

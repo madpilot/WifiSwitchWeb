@@ -23,6 +23,54 @@ describe("<MQTTPanel>", () => {
       onUpdate = sinon.stub();
     });
 
+    describe("#construct", () => {
+      let obj = () => {
+        return new MQTTPanel({
+          mqttAuthMode,
+          mqttServerName,
+          mqttPort,
+          mqttTLS,
+          mqttUsername,
+          mqttPassword,
+          mqttFingerprint,
+          mqttPublishChannel,
+          mqttSubscribeChannel,
+          onUpdate
+        });
+      };
+
+      describe("empty port", () => {
+        beforeEach(() => { mqttPort = "" });
+
+        describe("mqttTLS is true", () => {
+          beforeEach(() => { mqttTLS = true });
+
+          it("updates the port to be 8883", () => {
+            obj();
+            expect(onUpdate).to.have.been.calledWith(sinon.match({ mqttPort: "8883" }));
+          });
+        });
+
+        describe("mqttTLS is false", () => {
+          beforeEach(() => { mqttTLS = false });
+
+          it("updates the port to be 1883", () => {
+            obj();
+            expect(onUpdate).to.have.been.calledWith(sinon.match({ mqttPort: "1883" }));
+          });
+        });
+      });
+
+      describe("non-empty port", () => {
+        beforeEach(() => { mqttPort = "1234" });
+
+        it("should not update the port", () => {
+          obj();
+          expect(onUpdate).to.not.have.been.calledWith(sinon.match({ mqttPort: "1883" }));
+        });
+      });
+    });
+
     describe("#render", () => {
       describe("mqttServerName", () => {
         beforeEach(() => { mqttServerName = "mqtt.local" });
