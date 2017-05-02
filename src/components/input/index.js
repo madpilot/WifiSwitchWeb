@@ -14,10 +14,6 @@ export default class Input extends Component {
     }
   }
 
-  validationRun(state) {
-    this.setState(state);
-  }
-
   renderError() {
     if(!this.state.valid) {
       return (
@@ -55,7 +51,7 @@ export default class Input extends Component {
       <div className={className}>
         {this.renderLabel()}
         <span className={styles.wrapper}>
-          <ValidatedInput id={this._id} {...props} className={styles.input} onValidate={this.validationRun.bind(this)} />
+          <ValidatedInput id={this._id} {...props} className={styles.input} onValidate={this.setState.bind(this)} />
         </span>
       </div>
     );
