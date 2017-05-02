@@ -69,6 +69,201 @@ describe("<MQTTPanel>", () => {
           expect(onUpdate).to.not.have.been.calledWith(sinon.match({ mqttPort: "1883" }));
         });
       });
+
+      describe("SSL state", () => {
+        describe("not certificate authentication", () => {
+          beforeEach(() => { mqttAuthMode = AUTH_MODE_NONE });
+
+          describe("mqttTLS is true", () => {
+            beforeEach(() => { mqttTLS = true });
+
+            it("sets ssl to true", () => {
+              expect(obj().state.ssl).to.eq(true);
+            });
+
+            it("sets sslDisabled to false", () => {
+              expect(obj().state.sslDisabled).to.eq(false);
+            });
+
+            it("sets portDefault to 8883", () => {
+              expect(obj().state.portDefault).to.eq("8883");
+            });
+          });
+
+          describe("mqttTLS is false", () => {
+            beforeEach(() => { mqttTLS = false });
+
+            it("sets ssl to false", () => {
+              expect(obj().state.ssl).to.eq(false);
+            });
+
+            it("sets sslDisabled to false", () => {
+              expect(obj().state.sslDisabled).to.eq(false);
+            });
+
+            it("sets portDefault to 1883", () => {
+              expect(obj().state.portDefault).to.eq("1883");
+            });
+          });
+        });
+
+        describe("certificate authentication", () => {
+          beforeEach(() => { mqttAuthMode = AUTH_MODE_CERTIFICATE });
+
+          describe("mqttTLS is true", () => {
+            beforeEach(() => { mqttTLS = true });
+
+            it("sets ssl to true", () => {
+              expect(obj().state.ssl).to.eq(true);
+            });
+
+            it("sets sslDisabled to true", () => {
+              expect(obj().state.sslDisabled).to.eq(true);
+            });
+
+            it("sets portDefault to 8883", () => {
+              expect(obj().state.portDefault).to.eq("8883");
+            });
+          });
+
+          describe("mqttTLS is false", () => {
+            beforeEach(() => { mqttTLS = false });
+
+            it("sets ssl to true", () => {
+              expect(obj().state.ssl).to.eq(true);
+            });
+
+            it("sets sslDisabled to true", () => {
+              expect(obj().state.sslDisabled).to.eq(true);
+            });
+
+            it("sets portDefault to 8883", () => {
+              expect(obj().state.portDefault).to.eq("8883");
+            });
+          });
+        });
+      });
+    });
+
+    describe("#componentWillReceiveProps", () => {
+      let instance;
+      let obj = () => {
+        return new MQTTPanel({
+          mqttAuthMode: "",
+          mqttServerName: "",
+          mqttPort: "",
+          mqttTLS: "",
+          mqttUsername: "",
+          mqttPassword: "",
+          mqttFingerprint: "",
+          mqttPublishChannel: "",
+          mqttSubscribeChannel: "",
+          onUpdate: sinon.stub()
+        });
+      };
+
+      beforeEach(() => { instance = obj() });
+
+      let call = () => {
+        instance.componentWillReceiveProps({
+          mqttAuthMode,
+          mqttServerName,
+          mqttPort,
+          mqttTLS,
+          mqttUsername,
+          mqttPassword,
+          mqttFingerprint,
+          mqttPublishChannel,
+          mqttSubscribeChannel,
+          onUpdate
+        });
+      }
+
+      describe("SSL state", () => {
+        describe("not certificate authentication", () => {
+          beforeEach(() => { mqttAuthMode = AUTH_MODE_NONE });
+
+          describe("mqttTLS is true", () => {
+            beforeEach(() => { mqttTLS = true });
+
+            it("sets ssl to true", () => {
+              call();
+              expect(instance.state.ssl).to.eq(true);
+            });
+
+            it("sets sslDisabled to false", () => {
+              call();
+              expect(instance.state.sslDisabled).to.eq(false);
+            });
+
+            it("sets portDefault to 8883", () => {
+              call();
+              expect(instance.state.portDefault).to.eq("8883");
+            });
+          });
+
+          describe("mqttTLS is false", () => {
+            beforeEach(() => { mqttTLS = false });
+
+            it("sets ssl to false", () => {
+              call();
+              expect(instance.state.ssl).to.eq(false);
+            });
+
+            it("sets sslDisabled to false", () => {
+              call();
+              expect(instance.state.sslDisabled).to.eq(false);
+            });
+
+            it("sets portDefault to 1883", () => {
+              call();
+              expect(instance.state.portDefault).to.eq("1883");
+            });
+          });
+        });
+
+        describe("certificate authentication", () => {
+          beforeEach(() => { mqttAuthMode = AUTH_MODE_CERTIFICATE });
+
+          describe("mqttTLS is true", () => {
+            beforeEach(() => { mqttTLS = true });
+
+            it("sets ssl to true", () => {
+              call();
+              expect(instance.state.ssl).to.eq(true);
+            });
+
+            it("sets sslDisabled to true", () => {
+              call();
+              expect(instance.state.sslDisabled).to.eq(true);
+            });
+
+            it("sets portDefault to 8883", () => {
+              call();
+              expect(instance.state.portDefault).to.eq("8883");
+            });
+          });
+
+          describe("mqttTLS is false", () => {
+            beforeEach(() => { mqttTLS = false });
+
+            it("sets ssl to true", () => {
+              call();
+              expect(instance.state.ssl).to.eq(true);
+            });
+
+            it("sets sslDisabled to true", () => {
+              call();
+              expect(instance.state.sslDisabled).to.eq(true);
+            });
+
+            it("sets portDefault to 8883", () => {
+              call();
+              expect(instance.state.portDefault).to.eq("8883");
+            });
+          });
+        });
+      });
     });
 
     describe("#render", () => {
