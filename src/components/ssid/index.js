@@ -1,10 +1,11 @@
 import { h, Component } from 'preact';
-import Validator, * as Validation from '../../validation/validator.js';
-
+import * as Validation from '../../validation/validator.js';
+import ValidatedInput from '../validated-input/index.js';
 export const SCANNING = 0;
 export const SCANNING_COMPLETE = 1;
 
 import styles from './style.css';
+
 const textValidators = [ Validation.required(), Validation.length(255) ];
 
 // This needs a refactor
@@ -12,7 +13,6 @@ export default class SSID extends Component {
   constructor(props) {
     super(props);
     this._id = "ssid_" + Math.random().toString(36).substring(2, 7);
-    this.validator = new Validator(textValidators);
 
     this.state = {
       connection: SCANNING,
@@ -24,16 +24,8 @@ export default class SSID extends Component {
         ssid: this.props.ssid,
         encryption: this.props.encryption
       },
-      validate: {
-        manual: {
-          ssid: {
-            valid: false,
-            changed: this.props.ssid != "",
-            value: this.props.ssid,
-            initial: ""
-          }
-        }
-      },
+      valid: false,
+      error: '',
       aps: []
     };
   }
@@ -75,22 +67,23 @@ export default class SSID extends Component {
     }
   }
 
-  validate() {
-    let state = {
-      validate: {
-        manual: {
-          ssid: this.validator.validate(this.state.validate.manual.ssid)
-        }
-      }
-    }
-    this.setState(state);
-  }
-
   valid() {
     if(this.props.scan) {
       return this.state.connection == SCANNING_COMPLETE;
     } else {
-      return this.state.validate.manual.ssid.valid;
+      return this.state.valid;
+    }
+  }
+
+  validate(state) {
+    console.log("Validating...");
+    this.setState(state)
+    
+    if(this.props.onValidate) {
+      this.props.onValidate({
+        valid: this.state.valid,
+        error: this.state.error
+      });
     }
   }
 
@@ -98,14 +91,12 @@ export default class SSID extends Component {
     e.preventDefault();
     this.props.onModeChange(true);
     this.props.onChange(this.state.scanned);
-    this.validate();
   };
 
   setManualMode = e => {
     e.preventDefault();
     this.props.onModeChange(false);
     this.props.onChange(this.state.manual);
-    this.validate();
   };
 
   setScannedState(state) {
@@ -132,18 +123,6 @@ export default class SSID extends Component {
 
   changeManualSSID(e) {
     this.setManualState({ ssid: e.target.value });
-    this.setState({
-      validate: {
-        manual: {
-          ssid: {
-            changed: true,
-            value: e.target.value
-          }
-        }
-      }
-    });
-
-    this.validate();
   }
 
   renderScanning() {
@@ -177,21 +156,23 @@ export default class SSID extends Component {
 
   renderManual() {
     return (
-      <input
+      <ValidatedInput
         type="text"
         autocomplete="off"
         autocapitalize="off"
         value={this.state.manual.ssid}
         id={this._id}
         onInput={this.changeManualSSID.bind(this)}
-				className={styles.input} />
+        onValidate={this.validate.bind(this)}
+				className={styles.input}
+        validators={textValidators} />
     );
   }
 
   renderError() {
-    if(!this.props.scan && !this.state.validate.manual.ssid.valid) {
+    if(!this.props.scan && !this.state.valid) {
       return (
-        <span className={styles.error}>{this.state.validate.manual.ssid.error}</span>
+        <span className={styles.error}>{this.state.error}</span>
       );
     } else {
       return "";
