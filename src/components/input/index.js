@@ -10,7 +10,7 @@ export default class Input extends Component {
 
     this.state = {
       valid: false,
-      error: []
+      error: ''
     }
   }
 
