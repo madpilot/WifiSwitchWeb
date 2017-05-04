@@ -49,42 +49,14 @@ export default class SSID extends Component {
     });
   }
 
-  componentWillMount() {
-    if(this.context.validation) {
-      this.context.validation.register(this);
-    }
-  }
-
   componentDidMount() {
     if(this.state.connection == SCANNING) {
       this.scan();
     }
   }
 
-  componentWillUnmount() {
-    if(this.context.validation) {
-      this.context.validation.unregister(this);
-    }
-  }
-
-  valid() {
-    if(this.props.scan) {
-      return this.state.connection == SCANNING_COMPLETE;
-    } else {
-      return this.state.valid;
-    }
-  }
-
   validate(state) {
-    console.log("Validating...");
     this.setState(state)
-    
-    if(this.props.onValidate) {
-      this.props.onValidate({
-        valid: this.state.valid,
-        error: this.state.error
-      });
-    }
   }
 
   setScanMode = e => {
