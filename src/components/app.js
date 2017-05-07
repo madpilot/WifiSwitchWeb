@@ -28,9 +28,7 @@ export default class App extends Component {
       tab: TAB_SETTINGS
     });
     
-    setTimeout(() => {
-      this.fetchConfig();
-    }, 1000);
+    this.fetchConfig();
   }
 
   fetchConfig() {
