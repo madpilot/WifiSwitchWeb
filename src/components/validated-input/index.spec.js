@@ -2,12 +2,61 @@ import ValidatedInput from './index.js';
 import { Component } from 'preact';
 
 describe("<ValidatedInput>", () => {
+  describe("constructor", () => {
+    let value;
+
+    beforeEach(() => { value = "" });
+
+    describe("value empty", () => {
+      beforeEach(() => { value = "" });
+      
+      describe("changed", () => {
+        it("is false", () => {
+          let obj = new ValidatedInput({ value });
+          expect(obj.state.changed).to.eq(false);
+        });
+      });
+
+      describe("value", () => {
+        it("is empty", () => {
+          let obj = new ValidatedInput({ value });
+          expect(obj.state.value).to.eq("");
+        });
+      });
+    });
+
+    describe("non-empty value", () => {
+      beforeEach(() => { value = "value" });
+
+      describe("changed", () => {
+        it("is true", () => {
+          let obj = new ValidatedInput({ value });
+          expect(obj.state.changed).to.eq(true);
+        });
+
+        describe("value", () => {
+          it("is the value", () => {
+            let obj = new ValidatedInput({ value });
+            expect(obj.state.value).to.eq("value");
+          });
+        });
+      });
+    });
+  });
+
+  describe("componentWillReceiveProps", () => {
+    let value;
+
+    beforeEach(() =>{ value = "" });
+
+
+  });
+
   describe("#render", () => {
-    let value, onValidate, onInput, validators, props, initial;
+    let value, onValidate, onInput, validators, props;
 
     beforeEach(() =>{
       value = undefined;
-      initial = undefined;
       onInput = undefined;
       onValidate = sinon.spy();
       validators = undefined;
@@ -26,36 +75,18 @@ describe("<ValidatedInput>", () => {
       );
     });
 
-    describe("initial value", () => {
-      let obj = (() => { return new ValidatedInput({ initial: initial }) });
-      
-      describe("not set", () => {
-        it("initial is set to empty string", () => {
-          expect(obj().state.initial).to.eq("")
-        });
-      });
-
-      describe("set", () => {
-        beforeEach(() => { initial = "foo" });
-
-        it("initial is set to the prop value", () => {
-          expect(obj().state.initial).to.eq("foo")
-        });
-      });
-    });
-
     describe("changed", () => {
-      let obj = (() => { return new ValidatedInput({ value: value, initial: initial }) });
+      let obj = (() => { return new ValidatedInput({ value: value, }) });
       
-      describe("value same as initial", () => {
-        beforeEach(() => { initial = "foo"; value = "foo"; });
+      describe("empty", () => {
+        beforeEach(() => { value = ""; });
         it("changed is false", () => {
           expect(obj().state.changed).to.eq(false)
         });
       });
 
-      describe("value different to initial", () => {
-        beforeEach(() => { initial = "foo"; value = "bar"; });
+      describe("set", () => {
+        beforeEach(() => { value = "bar"; });
 
         it("changed is true", () => {
           expect(obj().state.changed).to.eq(true)
@@ -265,7 +296,7 @@ describe("<ValidatedInput>", () => {
       });
 
       it("calls the props.onValidate method", () => {
-        object().setState({ valid: true, error: [] });
+        object().setState({ valid: true, error: [], changed: true });
         object().validate();
         expect(onValidate).to.have.been.calledWith(sinon.match({ valid: true }));
       });

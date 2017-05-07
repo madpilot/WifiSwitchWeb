@@ -3,13 +3,12 @@ import { Component } from 'preact';
 
 describe("<Input>", () => {
   describe("#render", () => {
-    let value, label, className, onInvalid, onInput, validators, props, initial;
+    let value, label, className, onInvalid, onInput, validators, props;
 
     beforeEach(() =>{
       value = undefined;
       label = undefined;
       className = undefined;
-      initial = undefined;
       onInput = undefined;
       validators = undefined;
       props = {};
@@ -76,13 +75,13 @@ describe("<Input>", () => {
     });
 
     describe("validations", () => {
-      let valid, error, validators;
+      let valid, error, changed, validators;
       let input = null;
 
       let inputObj = (() => {
         if(input == null) {
           input = new Input({ label: label, validators: validators });
-          input.setState({ valid: valid, error: error });
+          input.setState({ valid: valid, error: error, changed: changed });
         }
         return input;
       });
@@ -95,6 +94,7 @@ describe("<Input>", () => {
         input = null, 
         validators = [], 
         valid = true, 
+        changed = false,
         error = "" 
       });
 
@@ -105,20 +105,44 @@ describe("<Input>", () => {
           describe("valid is true", () => {
             beforeEach(() => { valid = true; });
 
-            it("is not rendered", () => {
-              expect(el().querySelector("span.error")).to.eq(null);
+            describe("changed is false", () => {
+              beforeEach(() => { changed = false });
+
+              it("is not rendered", () => {
+                expect(el().querySelector("span.error")).to.eq(null);
+              });
+            });
+            
+            describe("changed is true", () => {
+              beforeEach(() => { changed = true });
+              
+              it("is not rendered", () => {
+                expect(el().querySelector("span.error")).to.eq(null);
+              });
             });
           });
 
           describe("valid is false", () => {
-            beforeEach(() => { valid = false; error = "Message" });
+            beforeEach(() => { valid = false; error = "Message", changed = false });
 
-            it("is rendered", () => {
-              expect(el().querySelector("span.error")).to.not.eq(null);
+            describe("changed is false", () => {
+              beforeEach(() => { changed = false; });
+              
+              it("is not rendered", () => {
+                expect(el().querySelector("span.error")).to.eq(null);
+              });
             });
+            
+            describe("changed is true", () => {
+              beforeEach(() => { changed = true; });
+              
+              it("is rendered", () => {
+                expect(el().querySelector("span.error")).to.not.eq(null);
+              });
 
-            it("renders the message", () => {
-              expect(el().querySelector("span.error").textContent).to.eq("Message");
+              it("renders the message", () => {
+                expect(el().querySelector("span.error").textContent).to.eq("Message");
+              });
             });
           });
         });

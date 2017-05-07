@@ -33,10 +33,6 @@ export default class Validator {
 	}
 
 	validate(obj) {
-		if(!obj.changed) {
-			return obj;
-		}
-
 		obj = Object.assign({}, obj, {
 			valid: true,
 			error: null

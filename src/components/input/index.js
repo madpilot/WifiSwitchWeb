@@ -10,12 +10,13 @@ export default class Input extends Component {
 
     this.state = {
       valid: false,
-      error: ''
+      error: '',
+      changed: false
     }
   }
 
   renderError() {
-    if(!this.state.valid) {
+    if(this.state.changed && !this.state.valid) {
       return (
         <span className={styles.error}>{this.state.error}</span>
       );

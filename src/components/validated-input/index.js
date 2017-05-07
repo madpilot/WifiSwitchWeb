@@ -6,14 +6,18 @@ export default class ValidatedInput extends Component {
     super(props);
     this.validator = new Validator(this.props.validators || []);
 
-    let initial = this.props.initial || "";
-
     this.state = {
       valid: false,
-      changed: this.props.value != initial,
-      value: this.props.value,
-      initial: initial
+      changed: props.value != "",
+      value: props.value
     }
+    this.validate();
+  }
+
+  componentWillReceiveProps(props) {
+    this.setState({
+      value: props.value
+    });
     this.validate();
   }
 
@@ -33,6 +37,7 @@ export default class ValidatedInput extends Component {
     this.setState(this.validator.validate(this.state));
     if(this.props.onValidate) {
       this.props.onValidate({
+        changed: this.state.changed,
         valid: this.state.valid,
         error: this.state.error
       })
