@@ -10,13 +10,20 @@ const textValidators = [ Validation.required(), Validation.length(255) ];
 export default class WifiPanel extends Component {
   constructor(props) {
     super(props);
+    this.state = this.propsToState(props);
+  }
 
-    this.state = {
+  componentWillReceiveProps(props) {
+    this.setState(this.propsToState(props));
+  }
+
+  propsToState(props) {
+    return {
       scan: props.scan,
       ssid: props.ssid,
       encryption: props.encryption,
       passkey: props.passkey
-    }
+    };
   }
 
   updateAP(state) {

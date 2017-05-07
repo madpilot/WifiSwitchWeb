@@ -38,8 +38,9 @@ export default class App extends Component {
       return response.text();
     }).then((config) => {
       let decoded = decode(config);
+      decoded.scan = false;
+      console.log(decoded);
       this.setState(decoded);
-      console.log(this.state);
     });
   }
 
@@ -48,9 +49,7 @@ export default class App extends Component {
   }
 
   update(settings) {
-    console.log('cleaned', cleanProps(settings));
     this.setState(cleanProps(settings));
-    console.log(this.state);
   }
 
   changeTab(tab) {

@@ -30,6 +30,19 @@ export default class SSID extends Component {
       aps: []
     };
   }
+  
+  componentWillReceiveProps(props) {
+    this.setState({
+      scanned: {
+        ssid: props.ssid,
+        encryption: props.encryption
+      },
+      manual: {
+        ssid: props.ssid,
+        encryption: props.encryption
+      }
+    });
+  }
 
   scan() {
     this.setState({ connection: SCANNING, aps: [] });
