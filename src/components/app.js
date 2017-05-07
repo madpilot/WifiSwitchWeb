@@ -49,7 +49,9 @@ export default class App extends Component {
 
   update(settings) {
     let cleaned = cleanProps(settings);
-    cleaned.scan = settings.scan;
+    if(typeof(settings.scan) != "undefined") {
+      cleaned.scan = settings.scan;
+    }
     this.setState(cleaned);
   }
 
