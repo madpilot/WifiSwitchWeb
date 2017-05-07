@@ -4,21 +4,21 @@ import Validator from '../../validation/validator.js';
 export default class ValidatedInput extends Component {
   constructor(props) {
     super(props);
-    this.validator = new Validator(this.props.validators || []);
+    this.validator = new Validator(props.validators || []);
 
-    this.state = {
+    this.state = this.validate({
       valid: false,
       changed: props.value != "",
       value: props.value
-    }
-    this.validate();
+    });
   }
 
   componentWillReceiveProps(props) {
-    this.setState({
-      value: props.value
-    });
-    this.validate();
+    if(this.state.value != props.value) {
+      this.setStateAndValidate({
+        value: props.value
+      });
+    }
   }
 
   componentWillMount() {
@@ -33,13 +33,20 @@ export default class ValidatedInput extends Component {
     }
   }
 
-  validate() {
-    this.setState(this.validator.validate(this.state));
+  validate(state) {
+    return this.validator.validate(state);
+  }
+
+  setStateAndValidate(state) {
+    state = Object.assign({}, this.state, state);
+    state = this.validate(state);
+    this.setState(state);
+
     if(this.props.onValidate) {
       this.props.onValidate({
-        changed: this.state.changed,
-        valid: this.state.valid,
-        error: this.state.error
+        changed: state.changed,
+        valid: state.valid,
+        error: state.error
       })
     }
   }
@@ -52,8 +59,7 @@ export default class ValidatedInput extends Component {
     var context = this;
 
     return function(e) {
-      context.setState({ value: e.target.value, changed: true });
-      context.validate();
+      context.setStateAndValidate({ value: e.target.value, changed: true });
 
       if(context.props.onInput) {
         context.props.onInput.apply(this, arguments);

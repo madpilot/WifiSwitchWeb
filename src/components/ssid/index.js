@@ -25,6 +25,7 @@ export default class SSID extends Component {
         encryption: this.props.encryption
       },
       valid: false,
+      changed: false,
       error: '',
       aps: []
     };
@@ -142,7 +143,7 @@ export default class SSID extends Component {
   }
 
   renderError() {
-    if(!this.props.scan && !this.state.valid) {
+    if(!this.props.scan && this.state.changed && !this.state.valid) {
       return (
         <span className={styles.error}>{this.state.error}</span>
       );

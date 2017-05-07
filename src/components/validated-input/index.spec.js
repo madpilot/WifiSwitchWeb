@@ -186,7 +186,13 @@ describe("<ValidatedInput>", () => {
 
       describe("validator", () => {
         describe("with supplied validators", () => {
-          beforeEach(() => { validators = [ sinon.spy() ] });
+          beforeEach(() => { 
+            let stub = sinon.stub();
+            stub.returns({
+              valid: true
+            });
+            validators = [ stub ] 
+          });
 
           it("is initialized with validators", () => {
             expect(inputObj().validator.validators).to.eq(validators);
@@ -274,31 +280,6 @@ describe("<ValidatedInput>", () => {
         it("should run the validator", () => {
           expect(validateSpy).to.have.been.calledOnce; 
         });
-      });
-    });
-
-    describe("validate()", () => {
-      let _obj;
-
-      beforeEach(() => { _obj = null });
-
-      let object = (() => {
-        if(_obj == null) {
-          _obj = new ValidatedInput({ onValidate: onValidate });
-        }
-        return _obj;
-      });
-
-      it("calls the validation object validate method", () => {
-        let spy = sinon.spy(object().validator, 'validate');
-        object().validate();
-        expect(spy).to.have.been.calledWith(object().state);
-      });
-
-      it("calls the props.onValidate method", () => {
-        object().setState({ valid: true, error: [], changed: true });
-        object().validate();
-        expect(onValidate).to.have.been.calledWith(sinon.match({ valid: true }));
       });
     });
   });
