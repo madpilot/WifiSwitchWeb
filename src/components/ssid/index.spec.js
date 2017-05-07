@@ -71,7 +71,7 @@ describe("<SSID>", () => {
       let fetcher;
 
       beforeEach(() => {
-        fetcher = sinon.stub(window, 'fetch').resolves({ json: sinon.stub().resolves(json) });
+        fetcher = sinon.stub(window, 'fetch').resolves({ ok: true, json: sinon.stub().resolves(json) });
       });
 
       afterEach(() =>{ 

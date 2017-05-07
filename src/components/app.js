@@ -35,11 +35,16 @@ export default class App extends Component {
 
   fetchConfig() {
     window.fetch("/config.dat").then((response) => {
+      if(!response.ok) {
+        throw Error(response.statusText);
+      }
       return response.text();
     }).then((config) => {
       let decoded = decode(config);
       decoded.scan = false;
       this.setState(decoded);
+    }).catch((error) => {
+      // Treat an error as a missing config. 
     });
   }
 
