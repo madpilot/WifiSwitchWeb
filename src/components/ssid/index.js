@@ -3,12 +3,11 @@ import * as Validation from '../../validation/validator.js';
 import ValidatedInput from '../validated-input/index.js';
 export const SCANNING = 0;
 export const SCANNING_COMPLETE = 1;
-export const SCANNING_FAILED = -1;
+
 import styles from './style.css';
 
 const textValidators = [ Validation.required(), Validation.length(255) ];
 
-// This needs a refactor
 export default class SSID extends Component {
   constructor(props) {
     super(props);
@@ -25,32 +24,15 @@ export default class SSID extends Component {
         encryption: this.props.encryption
       },
       valid: false,
-      changed: false,
       error: '',
       aps: []
     };
-  }
-  
-  componentWillReceiveProps(props) {
-    this.setState({
-      scanned: {
-        ssid: props.ssid,
-        encryption: props.encryption
-      },
-      manual: {
-        ssid: props.ssid,
-        encryption: props.encryption
-      }
-    });
   }
 
   scan() {
     this.setState({ connection: SCANNING, aps: [] });
 
     window.fetch("/aps.json").then((response) => {
-      if (!response.ok) {
-        throw Error(response.statusText);
-      }
       return response.json();
     }).then((aps) => {
       this.setState({
@@ -63,12 +45,7 @@ export default class SSID extends Component {
       } else {
         this.changeAp(aps[0].ssid);
       }
-    }).catch((error) => {
-      this.setState({
-        connection: SCANNING_FAILED,
-        error: error
-      });
-    });;
+    });
   }
 
   componentDidMount() {
@@ -158,13 +135,13 @@ export default class SSID extends Component {
         id={this._id}
         onInput={this.changeManualSSID.bind(this)}
         onValidate={this.validate.bind(this)}
-        className={styles.input}
+				className={styles.input}
         validators={textValidators} />
     );
   }
 
   renderError() {
-    if((this.props.scan && this.state.connection == SCANNING_FAILED) || (!this.props.scan && this.state.changed && !this.state.valid)) {
+    if(!this.props.scan && !this.state.valid) {
       return (
         <span className={styles.error}>{this.state.error}</span>
       );
@@ -176,7 +153,7 @@ export default class SSID extends Component {
   renderSelect() {
     if(this.state.connection == SCANNING) {
       return this.renderScanning();
-    } else if(this.state.connection == SCANNING_COMPLETE || this.state.connection == SCANNING_FAILED) {
+    } else if(this.state.connection == SCANNING_COMPLETE) {
       return this.renderAps();
     } else {
       return '';

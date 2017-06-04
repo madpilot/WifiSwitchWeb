@@ -22,12 +22,13 @@ import styles from './app.css';
 export default class App extends Component {
   constructor() {
     super();
-    
+
     this.state = Object.assign({}, CONFIG_DEFAULTS, {
       scan: true,
-      tab: TAB_SETTINGS
+      tab: TAB_SETTINGS,
+      loaded: false
     });
-    
+
     this.fetchConfig();
   }
 
@@ -40,9 +41,10 @@ export default class App extends Component {
     }).then((config) => {
       let decoded = decode(config);
       decoded.scan = false;
+      decoded.loaded = true;
       this.setState(decoded);
     }).catch((error) => {
-      // Treat an error as a missing config. 
+      // Treat an error as a missing config.
     });
   }
 

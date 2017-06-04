@@ -9,11 +9,11 @@ describe("<SSID>", () => {
   let obj = function() {
     if(_obj == null) {
       _obj = new SSID({
-        ssid, 
-        encryption, 
-        passkey, 
-        scan, 
-        onModeChange, 
+        ssid,
+        encryption,
+        passkey,
+        scan,
+        onModeChange,
         onChange
       });
     }
@@ -43,14 +43,14 @@ describe("<SSID>", () => {
       {"ssid":"OPTUS_B8EC72","rssi":-89,"encryption":"8"},
       {"ssid":"OPTUS_A49184","rssi":-85,"encryption":"8"}
     ];
-    
+
     let changeApStub;
 
     beforeEach(() => {
       changeApStub = sinon.stub(obj(), 'changeAp');
     });
 
-    afterEach(() =>{ 
+    afterEach(() =>{
       changeApStub.restore();
     });
 
@@ -74,7 +74,7 @@ describe("<SSID>", () => {
         fetcher = sinon.stub(window, 'fetch').resolves({ ok: true, json: sinon.stub().resolves(json) });
       });
 
-      afterEach(() =>{ 
+      afterEach(() =>{
         fetcher.restore();
       });
 
@@ -138,8 +138,8 @@ describe("<SSID>", () => {
 
       describe("SCANNING_COMPLETE mode", () => {
         describe("ap list empty", () => {
-          beforeEach(() => { 
-            obj().setState({ connection: SCANNING_COMPLETE, aps: [] }); 
+          beforeEach(() => {
+            obj().setState({ connection: SCANNING_COMPLETE, aps: [] });
           });
 
           it("disabled the SSID dropdown", () => {
@@ -152,8 +152,8 @@ describe("<SSID>", () => {
         });
 
         describe("ap list not empty", () => {
-          beforeEach(() => { 
-            obj().setState({ connection: SCANNING_COMPLETE, aps: [ {"ssid":"MYAP","rssi":-90,"encryption":"8"} ] }); 
+          beforeEach(() => {
+            obj().setState({ connection: SCANNING_COMPLETE, aps: [ {"ssid":"MYAP","rssi":-90,"encryption":"8"} ] });
           });
 
           it("enables the SSID dropdown", () => {
@@ -165,10 +165,58 @@ describe("<SSID>", () => {
           });
         });
       });
+
+      describe("error", () => {
+        describe("valid true", () => {
+          beforeEach(() => {
+            obj().setState({ valid: true });
+          });
+
+          it("is not rendered", () => {
+            expect(renderEl().querySelector("span.error")).to.eq(null);
+          });
+        });
+
+        describe("valid false", () => {
+          beforeEach(() => {
+            obj().setState({ valid: false, error: "not set" });
+          });
+
+          it("is not rendered", () => {
+            expect(renderEl().querySelector("span.error")).to.eq(null);
+          });
+        });
+      });
     });
 
     describe('manual', () => {
       beforeEach(() => { scan = false });
+
+      describe("error", () => {
+        describe("valid true", () => {
+          beforeEach(() => {
+            obj().setState({ valid: true });
+          });
+
+          it("is not rendered", () => {
+            expect(renderEl().querySelector("span.error")).to.eq(null);
+          });
+        });
+
+        describe("valid false", () => {
+          beforeEach(() => {
+            obj().setState({ valid: false, error: "not set" });
+          });
+
+          it("is rendered", () => {
+            expect(renderEl().querySelector("span.error")).to.not.eq(null);
+          });
+
+          it("renders the error", () => {
+            expect(renderEl().querySelector("span.error").textContent).to.eq("not set");
+          });
+        });
+      });
     });
   });
 });
