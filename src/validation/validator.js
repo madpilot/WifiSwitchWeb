@@ -1,7 +1,3 @@
-function defaultPredicate() {
-  return true;
-}
-
 export function required() {
   return function(obj) {
     if((obj.value + "").trim() == "") {
@@ -20,7 +16,7 @@ export function length(len) {
     if((obj.value + "").trim().length > len) {
       obj = Object.assign({}, obj, {
         valid: false,
-        error: "is too long (Max is + " + len + ")"
+        error: "is too long (Max is " + len + ")"
       });
     }
     return obj;
