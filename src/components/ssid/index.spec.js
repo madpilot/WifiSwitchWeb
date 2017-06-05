@@ -1,5 +1,5 @@
 import SSID from './index.js';
-import { SCANNING, SCANNING_COMPLETE } from './index.js';
+import { SCANNING, SCANNING_COMPLETE, SCANNING_FAILED } from './index.js';
 import { Component } from 'preact';
 
 describe("<SSID>", () => {
@@ -24,6 +24,17 @@ describe("<SSID>", () => {
     return renderHTML(obj().render());
   }
 
+  let aps = [
+    {"ssid":"OPTUSVD3C49EE8","rssi":-90,"encryption":"8"},
+    {"ssid":"Dean&Carol.b","rssi":-92,"encryption":"7"},
+    {"ssid":"NETGEAR19","rssi":-76,"encryption":"4"},
+    {"ssid":"MyWifi","rssi":-60,"encryption":"4"},
+    {"ssid":"OPTUS_B8EC72","rssi":-89,"encryption":"8"},
+    {"ssid":"OPTUS_A49184","rssi":-85,"encryption":"8"}
+  ];
+
+
+
   beforeEach(() =>{
     ssid = undefined;
     encryption = undefined;
@@ -35,15 +46,7 @@ describe("<SSID>", () => {
   });
 
   describe("#scan", () => {
-    let json = [
-      {"ssid":"OPTUSVD3C49EE8","rssi":-90,"encryption":"8"},
-      {"ssid":"Dean&Carol.b","rssi":-92,"encryption":"7"},
-      {"ssid":"NETGEAR19","rssi":-76,"encryption":"4"},
-      {"ssid":"MyWifi","rssi":-60,"encryption":"4"},
-      {"ssid":"OPTUS_B8EC72","rssi":-89,"encryption":"8"},
-      {"ssid":"OPTUS_A49184","rssi":-85,"encryption":"8"}
-    ];
-
+    let json = aps;
     let changeApStub;
 
     beforeEach(() => {
@@ -95,9 +98,9 @@ describe("<SSID>", () => {
       });
 
       describe("ssid state set", () => {
-        beforeEach(() => { ssid: 'MyWifi' });
+        beforeEach(() => { obj().state.scanned.ssid = 'MyWifi' });
 
-        it("should select the previous selected ap", () => {
+        it("should select the previous selected ap", (done) => {
           obj().scan();
           setTimeout(() => {
             expect(changeApStub).to.have.been.calledWith('MyWifi');
@@ -107,7 +110,7 @@ describe("<SSID>", () => {
       });
 
       describe("ssid state not set", () => {
-        beforeEach(() => { ssid: 'nointhere' });
+        beforeEach(() => { obj().state.scanned.ssid = 'nointhere' });
 
         it("should select the first ap", (done) => {
           obj().scan();
@@ -166,6 +169,21 @@ describe("<SSID>", () => {
         });
       });
 
+      describe("Unknown connection state", () =>{
+        beforeEach(() => {
+          obj().setState({ connection: SCANNING_FAILED, aps:[] });
+        });
+
+        it("disabled the SSID dropdown", () => {
+          expect(renderEl().querySelector("select.select-ap").disabled).to.eq(true);
+        });
+
+        it("the SSID dropdown says 'No Access Points Found", () => {
+          expect(renderEl().querySelector("select.select-ap > option").textContent).to.eq("No Access Points Found");
+        });
+
+      });
+
       describe("error", () => {
         describe("valid true", () => {
           beforeEach(() => {
@@ -216,6 +234,171 @@ describe("<SSID>", () => {
             expect(renderEl().querySelector("span.error").textContent).to.eq("not set");
           });
         });
+      });
+    });
+
+    describe("setScanMode", () => {
+      let e;
+
+      beforeEach(() => {
+        e = {
+          preventDefault: sinon.spy()
+        }
+      });
+
+      it("calls props.onModeChange with false", () => {
+        obj().setScanMode(e);
+        expect(onModeChange).to.have.been.calledWith(true);
+      });
+
+      it("calls props.onChange with the manual state", () => {
+        let scanned = sinon.stub();
+        obj().state.scanned = scanned;
+        obj().setScanMode(e);
+        expect(onChange).to.have.been.calledWith(scanned)
+      });
+    });
+
+    describe("setManualMode", () => {
+      let e;
+
+      beforeEach(() => {
+        e = {
+          preventDefault: sinon.spy()
+        }
+      });
+
+      it("calls props.onModeChange with false", () => {
+        obj().setManualMode(e);
+        expect(onModeChange).to.have.been.calledWith(false);
+      });
+
+      it("calls props.onChange with the manual state", () => {
+        let manual = sinon.stub();
+        obj().state.manual = manual;
+        obj().setManualMode(e);
+        expect(onChange).to.have.been.calledWith(manual)
+      });
+    });
+
+    describe("setScannedState", () => {
+      let e, state, spy, merged;
+
+      beforeEach(() => {
+        e = {
+          preventDefault: sinon.spy()
+        }
+
+        state = { ssid: 'new-ssid' }
+        merged = Object.assign({}, obj().state.scanned, state);
+        spy = sinon.spy(obj(), 'setState');
+        obj().setScannedState(state);
+      });
+
+      it("merges the scanned state", () => {
+        expect(spy).to.have.been.calledWith({ scanned: merged });
+      });
+
+      it("sends the updates state to onChange", () => {
+        expect(onChange).to.have.been.calledWith(merged)
+      });
+    });
+
+    describe("setManualState", () => {
+      let e, state, spy, merged;
+
+      beforeEach(() => {
+        e = {
+          preventDefault: sinon.spy()
+        }
+
+        state = { ssid: 'new-ssid' }
+        merged = Object.assign({}, obj().state.manual, state);
+        spy = sinon.spy(obj(), 'setState');
+        obj().setManualState(state);
+      });
+
+      it("merges the manual state", () => {
+        expect(spy).to.have.been.calledWith({ manual: merged });
+      });
+
+      it("sends the updates state to onChange", () => {
+        expect(onChange).to.have.been.calledWith(merged)
+      });
+    });
+
+    describe("changeAp", () => {
+      it("Sets the scanned AP", () => {
+        obj().state.aps = aps;
+        let spy = sinon.spy(obj(), "setScannedState");
+        obj().changeAp("MyWifi");
+        expect(spy).to.have.been.calledWith({ ssid: "MyWifi", encryption: "4" });
+
+      });
+    });
+
+    describe("onChangeAp", () => {
+      let e;
+
+      beforeEach(() => {
+        e = {
+          target: {
+            value: "TestAp"
+          }
+        };
+      });
+
+      it("changes the AP", () => {
+        let spy = sinon.spy(obj(), "changeAp");
+        obj().onChangeAp(e);
+        expect(spy).to.have.been.calledWith("TestAp");
+      });
+    });
+
+    describe("changeManualSSID", () => {
+      let e;
+
+      beforeEach(() => {
+        e = { 
+          target: {
+            value: "TestAp"
+          }
+        }
+      });
+
+      it("sets the manual state", () => {
+        obj().changeManualSSID(e);
+        expect(obj().state.manual.ssid).to.eq("TestAp");
+      })
+    });
+
+    describe('onScan', () => {
+      let e;
+
+      beforeEach(() => {
+        e = {
+          preventDefault: sinon.stub()
+        }
+      });
+
+      it("prevents default", () => {
+        obj().onScan(e);
+        expect(e.preventDefault).to.have.beenCalled;
+      });
+
+      it("re-scans", () => {
+        let spy = sinon.spy(obj(), 'scan');
+        obj().onScan(e);
+        expect(spy).to.have.beenCalled;
+      });
+    });
+
+    describe("validate", () => {
+      it("proxies validate", () => {
+        let state = sinon.stub();
+        let spy = sinon.spy(obj(), 'setState');
+        obj().validate(state);
+        expect(spy).to.have.been.calledWith(state);
       });
     });
   });

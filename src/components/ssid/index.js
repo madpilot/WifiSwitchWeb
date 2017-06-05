@@ -3,6 +3,7 @@ import * as Validation from '../../validation/validator.js';
 import ValidatedInput from '../validated-input/index.js';
 export const SCANNING = 0;
 export const SCANNING_COMPLETE = 1;
+export const SCANNING_FAILED = -1;
 
 import styles from './style.css';
 
@@ -40,8 +41,8 @@ export default class SSID extends Component {
         connection: SCANNING_COMPLETE
       });
 
-      if(aps.indexOf(this.state.ssid) > -1) {
-        this.changeAp(this.state.ssid);
+      if(aps.filter((ap) => { return ap.ssid == this.state.scanned.ssid }).length > 0) {
+        this.changeAp(this.state.scanned.ssid);
       } else {
         this.changeAp(aps[0].ssid);
       }
@@ -54,7 +55,7 @@ export default class SSID extends Component {
     }
   }
 
-  validate(state) {
+  validate = state => {
     this.setState(state)
   }
 
@@ -71,8 +72,9 @@ export default class SSID extends Component {
   };
 
   setScannedState(state) {
-    this.setState({ scanned: Object.assign({}, this.state.scanned, state) });
-    this.props.onChange(this.state.scanned);
+    let newState = Object.assign({}, this.state.scanned, state);
+    this.setState({ scanned: newState });
+    this.props.onChange(newState);
   }
 
   setManualState(state) {
@@ -88,11 +90,11 @@ export default class SSID extends Component {
     }
   };
 
-  onChangeAp(e) {
+  onChangeAp = e => {
     this.changeAp(e.target.value);
   }
 
-  changeManualSSID(e) {
+  changeManualSSID = e => {
     this.setManualState({ ssid: e.target.value });
   }
 
@@ -104,12 +106,15 @@ export default class SSID extends Component {
     );
   }
 
-  renderAps() {
-    let aps = this.state.aps;
+  onScan = e => {
+    e.preventDefault();
+    this.scan();
+  }
 
+  renderAps(aps) {
     return (
       <div className={styles.wrapper}>
-        <select id={this._id} onChange={this.onChangeAp.bind(this)} className={styles['select-ap']} disabled={aps.length == 0}>
+        <select id={this._id} onChange={this.onChangeAp} className={styles['select-ap']} disabled={aps.length == 0}>
           {aps.length > 0 ?
             this.state.aps.map((ap) => {
               return (
@@ -120,7 +125,7 @@ export default class SSID extends Component {
             <option value="">No Access Points Found</option>
           }
         </select>
-        <a href="#" className={styles.rescan} onClick={(e) => { e.preventDefault(); this.scan() }}>&#8635;</a>
+        <a href="#" className={styles.rescan} onClick={this.onScan}>&#8635;</a>
       </div>
     );
   }
@@ -133,8 +138,8 @@ export default class SSID extends Component {
         autocapitalize="off"
         value={this.state.manual.ssid}
         id={this._id}
-        onInput={this.changeManualSSID.bind(this)}
-        onValidate={this.validate.bind(this)}
+        onInput={this.changeManualSSID}
+        onValidate={this.validate}
 				className={styles.input}
         validators={textValidators} />
     );
@@ -154,9 +159,9 @@ export default class SSID extends Component {
     if(this.state.connection == SCANNING) {
       return this.renderScanning();
     } else if(this.state.connection == SCANNING_COMPLETE) {
-      return this.renderAps();
+      return this.renderAps(this.state.aps);
     } else {
-      return '';
+      return this.renderAps([]);
     }
   }
 
