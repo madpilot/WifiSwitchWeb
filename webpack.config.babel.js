@@ -4,6 +4,7 @@ import CssoWebpackPlugin from 'csso-webpack-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import HtmlWebpackInlineSourcePlugin from 'html-webpack-inline-source-plugin';
 import ReplacePlugin from 'replace-bundle-webpack-plugin';
+import fileUpload from 'express-fileupload';
 import path from 'path';
 import fs from 'fs';
 const ENV = process.env.NODE_ENV || 'development';
@@ -61,7 +62,7 @@ module.exports = {
 		}),
     new HtmlWebpackInlineSourcePlugin()
 	]).concat(ENV === 'production' ? [
-    new CssoWebpackPlugin({ 
+    new CssoWebpackPlugin({
       sourceMap: false
     }),
 		new webpack.optimize.UglifyJsPlugin({
@@ -116,11 +117,12 @@ module.exports = {
 		historyApiFallback: true,
 		open: true,
 		setup(app) {
+      app.use(fileUpload());
 			app.get("/config.dat", function(req, res) {
 				fs.readFile('data/config.dat', 'utf-8', function(error, data) {
 					res.writeHead(200, { 'Content-type': 'application/octet-stream' });
 					res.end(data, 'binary');
-				});				
+				});
 			});
 
 			app.post("/config.dat", function(req, res) {
@@ -137,6 +139,14 @@ module.exports = {
 					{"ssid":"OPTUS_A49184","rssi":-85,"encryption":"8"}
 				]);
 			});
+
+      app.post("/firmware", function(req, res) {
+        if (!req.files) {
+          return res.status(400).send('No files were uploaded.');
+        }
+
+        res.send('File uploaded!');
+      });
 		}
 	}
 };

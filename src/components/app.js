@@ -52,6 +52,15 @@ export default class App extends Component {
 
   }
 
+  uploadFirmware(e) {
+    e.preventDefault();
+    console.log(e.target);
+
+    let xhr = new XMLHttpRequest();
+    xhr.open("post", "/firmware");
+    xhr.send(new FormData(e.target));
+  }
+
   update(settings) {
     let cleaned = cleanProps(settings);
     if(typeof(settings.scan) != "undefined") {
@@ -104,8 +113,9 @@ export default class App extends Component {
             <Button>Save</Button>
           </Form>
         </Tab>
+
         <Tab name={TAB_FIRMWARE} current={this.state.tab}>
-          <Form class={styles.form}>
+          <Form class={styles.form} onSubmit={this.uploadFirmware.bind(this)}>
             <Firmware />
             <Button>Upload</Button>
           </Form>
