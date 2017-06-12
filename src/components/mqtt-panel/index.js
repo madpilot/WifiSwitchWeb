@@ -145,8 +145,8 @@ export default class MQTTPanel extends Component {
     if(this.props.mqttAuthMode == AUTH_MODE_CERTIFICATE) {
       return (
         <div>
-          <Input label="Certificate" type="file" name="mqttCertificateFile" />
-          <Input label="Key" type="file" name="mqttKeyFile" />
+          <Input label="Certificate" type="file" data-filename="client.cert.der" name="mqttCertificateFile" />
+          <Input label="Key" type="file" name="mqttKeyFile" data-filename="client.key.der" />
         </div>
       );
     } else {

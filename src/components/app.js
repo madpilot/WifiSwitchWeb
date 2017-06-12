@@ -48,13 +48,28 @@ export default class App extends Component {
     });
   }
 
-  saveConfig() {
-
+  saveConfig(e) {
+    e.preventDefault();
+    
+    let formData = new FormData();
+    formData.append("config.dat", encode(this.state)); 
+    
+    let files = e.target.querySelectorAll("input[type=\"file\"]")
+    for(let i = 0; i < files.length; i++) {
+      let el = files[i];
+      let filename = el.getAttribute("data-filename");
+      if(filename && el.files.length > 0) {
+        formData.append(filename, el.files[0]);
+      }
+    }
+    
+    let xhr = new XMLHttpRequest();
+    xhr.open("post", "/config.dat");
+    xhr.send(formData);
   }
 
   uploadFirmware(e) {
     e.preventDefault();
-    console.log(e.target);
 
     let xhr = new XMLHttpRequest();
     xhr.open("post", "/firmware");
@@ -89,7 +104,7 @@ export default class App extends Component {
         </nav>
 
         <Tab name={TAB_SETTINGS} current={this.state.tab}>
-          <Form class={styles.form}>
+          <Form class={styles.form} onSubmit={this.saveConfig.bind(this)}>
             <WifiPanel
               {...this.state}
               onUpdate={this.update.bind(this)}
