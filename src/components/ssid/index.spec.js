@@ -121,6 +121,34 @@ describe("<SSID>", () => {
         });
       });
     });
+
+    describe("on failure", () => {
+      let fetcher;
+
+      beforeEach(() => {
+        fetcher = sinon.stub(window, 'fetch').rejects("Unknown error");
+      });
+
+      afterEach(() =>{
+        fetcher.restore();
+      });
+
+      it("sets connection mode to scanning complete", (done) => {
+        obj().scan();
+        setTimeout(() => {
+          expect(obj().state.connection).to.eq(SCANNING_COMPLETE);
+          done();
+        });
+      });
+
+      it("sets the ap list to empty", (done) => {
+        obj().scan();
+        setTimeout(() => {
+          expect(obj().state.aps).to.eql([]);
+          done();
+        });
+      });
+    });
   });
 
   describe("#render", () => {

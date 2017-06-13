@@ -46,6 +46,12 @@ export default class SSID extends Component {
       } else {
         this.changeAp(aps[0].ssid);
       }
+    }).catch((error) => {
+       // Treat an error like an empty array.
+       this.setState({
+        aps: [],
+        connection: SCANNING_COMPLETE
+      });
     });
   }
 

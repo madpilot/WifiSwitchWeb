@@ -64,7 +64,7 @@ export default class App extends Component {
     }
     
     let xhr = new XMLHttpRequest();
-    xhr.open("post", "/config.dat");
+    xhr.open("post", "/update");
     xhr.send(formData);
   }
 
